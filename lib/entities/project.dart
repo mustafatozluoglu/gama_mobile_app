@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
+@JsonSerializable(nullable: false)
 class Project {
   int ID;
   String post_author;
@@ -12,7 +12,7 @@ class Project {
   String post_name;
   String post_modified;
   String post_guid;
-  String menu_order;
+  int menu_order;
   String post_type;
   String filter;
   List<FeaturedImage> featured_image;
@@ -69,78 +69,85 @@ class Project {
 
   static List<FeaturedImage> parseFeaturedImage(featuredImageJson) {
     var list = featuredImageJson['featured_image'] as List;
-    List<FeaturedImage> featuredImageList = list.map((data)=>FeaturedImage.fromJson(data)).toList();
+    List<FeaturedImage> featuredImageList =
+        list.map((data) => FeaturedImage.fromJson(data)).toList();
     return featuredImageList;
   }
 
-  static List<MetaData> parseMetaData(metaDataJson){
+  static List<MetaData> parseMetaData(metaDataJson) {
     var list = metaDataJson['meta_data'] as List;
-    List<MetaData> metaDataList = list.map((data)=>MetaData.fromJson(data)).toList();
+    List<MetaData> metaDataList =
+        list.map((data) => MetaData.fromJson(data)).toList();
     return metaDataList;
   }
 
-  static List<Country> parseCountry(countryJson){
+  static List<Country> parseCountry(countryJson) {
     var list = countryJson['country'] as List;
-    List<Country> countryList = list.map((data)=>Country.fromJson(data)).toList();
+    List<Country> countryList =
+        list.map((data) => Country.fromJson(data)).toList();
     return countryList;
   }
 
-  static List<BusinessLine> parseBusinessLine(businessLineJson){
+  static List<BusinessLine> parseBusinessLine(businessLineJson) {
     var list = businessLineJson['business_line'] as List;
-    List<BusinessLine> businessLineList = list.map((data)=>BusinessLine.fromJson(data)).toList();
+    List<BusinessLine> businessLineList =
+        list.map((data) => BusinessLine.fromJson(data)).toList();
     return businessLineList;
   }
 
-  static List<Grouping> parseGrouping(groupingJson){
+  static List<Grouping> parseGrouping(groupingJson) {
     var list = groupingJson['grouping'] as List;
-    List<Grouping> groupingList = list.map((data)=>Grouping.fromJson(data)).toList();
+    List<Grouping> groupingList =
+        list.map((data) => Grouping.fromJson(data)).toList();
     return groupingList;
   }
 
-  static List<Status> parseStatus(statusJson){
+  static List<Status> parseStatus(statusJson) {
     var list = statusJson['status'] as List;
-    List<Status> statusList = list.map((data)=>Status.fromJson(data)).toList();
+    List<Status> statusList =
+        list.map((data) => Status.fromJson(data)).toList();
     return statusList;
   }
 
-  static List<Gallery> parseGallery(galleryJson){
+  static List<Gallery> parseGallery(galleryJson) {
     var list = galleryJson['gallery'] as List;
-    List<Gallery> galleryList = list.map((data)=>Gallery.fromJson(data)).toList();
+    List<Gallery> galleryList =
+        list.map((data) => Gallery.fromJson(data)).toList();
     return galleryList;
   }
-
-
 }
 
+@JsonSerializable()
 class FeaturedImage {
-  String full;
-  String large;
-  String medium;
-  String thumb;
+  final String full;
+  final String large;
+  final String medium;
+  final String thumb;
 
   FeaturedImage({this.full, this.large, this.medium, this.thumb});
 
   factory FeaturedImage.fromJson(Map<String, dynamic> parsedJson) {
     return FeaturedImage(
-        full: parsedJson['full'],
-        large: parsedJson['large'],
-        medium: parsedJson['medium'],
-        thumb: parsedJson['thumb']);
+        full: parsedJson['full'] as String,
+        large: parsedJson['large'] as String,
+        medium: parsedJson['medium'] as String,
+        thumb: parsedJson['thumb'] as String);
   }
 }
 
+@JsonSerializable()
 class MetaData {
-  String city;
-  String year;
-  String main_contractor;
-  String employer;
-  String duration;
-  String expected_end;
-  String price;
-  String man_hour;
-  String awards;
-  String images;
-  String is_featured;
+  final String city;
+  final String year;
+  final String main_contractor;
+  final String employer;
+  final String duration;
+  final String expected_end;
+  final String price;
+  final String man_hour;
+  final List<String> awards;
+  final String images;
+  final bool is_featured;
 
   MetaData(
       {this.city,
@@ -165,24 +172,34 @@ class MetaData {
         expected_end: parsedJson['expected_end'],
         price: parsedJson['price'],
         man_hour: parsedJson['man_hour'],
-        awards: parsedJson['awards'],
+        awards: parseAwards(parsedJson['awards']),
         images: parsedJson['images'],
         is_featured: parsedJson['is_featured']);
   }
+
+  static List<String> parseAwards(awardsJson) {
+    List<String> awardsList;
+    if (awardsJson.toString().length > 0)
+       awardsList = new List<String>.from(awardsJson);
+    else
+      awardsList = new List<String>();
+
+    return awardsList;
+  }
 }
 
+@JsonSerializable()
 class Country {
-  int term_id;
-  String name;
-  String slug;
-  int term_group;
-  int term_taxonomy_id;
-  String taxonomy;
-  String description;
-  int parent;
-  int count;
-  String filter;
-  String term_order;
+  final int term_id;
+  final String name;
+  final String slug;
+  final int term_group;
+  final int term_taxonomy_id;
+  final String taxonomy;
+  final String description;
+  final int parent;
+  final int count;
+  final String filter;
 
   Country(
       {this.term_id,
@@ -195,7 +212,7 @@ class Country {
       this.parent,
       this.count,
       this.filter,
-      this.term_order});
+      });
 
   factory Country.fromJson(Map<String, dynamic> parsedJson) {
     return Country(
@@ -207,23 +224,23 @@ class Country {
         description: parsedJson['description'],
         parent: parsedJson['parent'],
         count: parsedJson['count'],
-        filter: parsedJson['filter'],
-        term_order: parsedJson['term_order']);
+        filter: parsedJson['filter']
+        );
   }
 }
 
+@JsonSerializable()
 class BusinessLine {
-  int term_id;
-  String name;
-  String slug;
-  int term_group;
-  int term_taxonomy_id;
-  String taxonomy;
-  String description;
-  int parent;
-  int count;
-  String filter;
-  int term_order;
+  final int term_id;
+  final String name;
+  final String slug;
+  final int term_group;
+  final int term_taxonomy_id;
+  final String taxonomy;
+  final String description;
+  final int parent;
+  final int count;
+  final String filter;
 
   BusinessLine(
       {this.term_id,
@@ -236,7 +253,7 @@ class BusinessLine {
       this.parent,
       this.count,
       this.filter,
-      this.term_order});
+      });
 
   factory BusinessLine.fromJson(Map<String, dynamic> parsedJson) {
     return BusinessLine(
@@ -248,23 +265,23 @@ class BusinessLine {
         description: parsedJson['description'],
         parent: parsedJson['parent'],
         count: parsedJson['count'],
-        filter: parsedJson['filter'],
-        term_order: parsedJson['term_order']);
+        filter: parsedJson['filter']
+       );
   }
 }
 
+@JsonSerializable()
 class Grouping {
-  int term_id;
-  String name;
-  String slug;
-  int term_group;
-  int term_taxonomy_id;
-  String taxonomy;
-  String description;
-  int parent;
-  int count;
-  String filter;
-  int term_order;
+  final int term_id;
+  final String name;
+  final String slug;
+  final int term_group;
+  final int term_taxonomy_id;
+  final String taxonomy;
+  final String description;
+  final int parent;
+  final int count;
+  final String filter;
 
   Grouping(
       {this.term_id,
@@ -277,7 +294,7 @@ class Grouping {
       this.parent,
       this.count,
       this.filter,
-      this.term_order});
+      });
 
   factory Grouping.fromJson(Map<String, dynamic> parsedJson) {
     return Grouping(
@@ -289,23 +306,22 @@ class Grouping {
         description: parsedJson['description'],
         parent: parsedJson['parent'],
         count: parsedJson['count'],
-        filter: parsedJson['filter'],
-        term_order: parsedJson['term_order']);
+        filter: parsedJson['filter']);
   }
 }
 
+@JsonSerializable()
 class Status {
-  int term_id;
-  String name;
-  String slug;
-  int term_group;
-  int term_taxonomy_id;
-  String taxonomy;
-  String description;
-  int parent;
-  int count;
-  String filter;
-  int term_order;
+  final int term_id;
+  final String name;
+  final String slug;
+  final int term_group;
+  final int term_taxonomy_id;
+  final String taxonomy;
+  final String description;
+  final int parent;
+  final int count;
+  final String filter;
 
   Status(
       {this.term_id,
@@ -317,8 +333,7 @@ class Status {
       this.description,
       this.parent,
       this.count,
-      this.filter,
-      this.term_order});
+      this.filter});
 
   factory Status.fromJson(Map<String, dynamic> parsedJson) {
     return Status(
@@ -330,17 +345,17 @@ class Status {
         description: parsedJson['description'],
         parent: parsedJson['parent'],
         count: parsedJson['count'],
-        filter: parsedJson['filter'],
-        term_order: parsedJson['term_order']);
+        filter: parsedJson['filter']);
   }
 }
 
+@JsonSerializable()
 class Gallery {
-  int id;
-  String full;
-  String large;
-  String medium;
-  String thumb;
+  final String id;
+  final String full;
+  final String large;
+  final String medium;
+  final String thumb;
 
   Gallery({this.id, this.full, this.large, this.medium, this.thumb});
 

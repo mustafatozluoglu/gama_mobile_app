@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gama_app/entities/project.dart';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:x509csr/x509csr.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -154,9 +156,9 @@ class YapIsletDevret extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   child: Image.network(
-                    project.featured_image['thumb'],
-                    height: 50.0,
-                    width: 50.0,
+                    project.featured_image[0].thumb,
+                    height: 150.0,
+                    
                   ),
                   padding: EdgeInsets.only(bottom: 10.0),
                 ),
@@ -165,7 +167,7 @@ class YapIsletDevret extends StatelessWidget {
                       child: Column(
                     children: <Widget>[
                       new Chip(label: new Text(project.post_title)),
-                      new Chip(label: new Text(project.meta_data['city']))
+                      new Chip(label: new Text(project.meta_data[0].city))
                     ],
                   )),
                 ]),
@@ -182,11 +184,28 @@ class YapIsletDevret extends StatelessWidget {
   }
 }
 
-Future<List<Project>> downloadJSON() async {
-  final response = await rootBundle.loadString('assets/data.json');
 
-  List projects = json.decode(response);
+
+Future<List<Project>> downloadJSON(String url) async {
+  HttpClient client = new HttpClient();
+  client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+
+
+  HttpClientRequest request = await client.getUrl(Uri.parse(url));
+  request.headers.set('content-type', 'application/json');
+  HttpClientResponse response = await request.close();
+  
+  String reply = await response.transform(utf8.decoder).join();
+  
+  List projects = json.decode(reply);
+  
+  
   return projects.map((project) => new Project.fromJson(project)).toList();
+ 
+  /*
+  final response = await rootBundle.loadString('assets/data.json');
+  List projects = json.decode(response);
+  return projects.map((project) => new Project.fromJson(project)).toList();*/
 }
 
 class SecondScreen extends StatefulWidget {
@@ -215,24 +234,24 @@ class DetailProject extends State<SecondScreen> {
                 padding: EdgeInsets.only(bottom: 20.0),
               ),
               Padding(
-                child: Image.network(widget.value.picture),
+                child: Image.network(widget.value.featured_image[0].thumb,height: 150,),
+                
                 padding: EdgeInsets.only(bottom: 8.0),
               ),
               Padding(
                 child: new Text(
-                  widget.value.name,
+                  widget.value.post_title,
                   style: new TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(2.0),
               ),
               Padding(
                 child: new Text(
-                  widget.value.address,
-                  style: new TextStyle(fontWeight: FontWeight.bold),
+                  widget.value.post_content,
                   textAlign: TextAlign.left,
                 ),
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(2.0),
               )
             ],
           ),
@@ -243,6 +262,8 @@ class DetailProject extends State<SecondScreen> {
 }
 
 class YapIsletDevretScreen extends StatelessWidget {
+  String yap_islet_devret_URL = 'https://udev.gama.com.tr/holding/wp-json/api/en/v1/projects/'; 
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -253,7 +274,7 @@ class YapIsletDevretScreen extends StatelessWidget {
         ),
         body: new Center(
           child: new FutureBuilder<List<Project>>(
-            future: downloadJSON(),
+            future: downloadJSON(yap_islet_devret_URL),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Project> projects = snapshot.data;
