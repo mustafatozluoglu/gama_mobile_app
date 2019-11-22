@@ -7,7 +7,8 @@ import 'package:gama_app/entities/project.dart';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:x509csr/x509csr.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_test_utils/image_test_utils.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -157,7 +158,6 @@ class YapIsletDevret extends StatelessWidget {
                 Padding(
                   child: Image.network(
                     project.featured_image[0].thumb,
-                    height: 150.0,
                     
                   ),
                   padding: EdgeInsets.only(bottom: 10.0),
@@ -189,7 +189,6 @@ class YapIsletDevret extends StatelessWidget {
 Future<List<Project>> downloadJSON(String url) async {
   HttpClient client = new HttpClient();
   client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-
 
   HttpClientRequest request = await client.getUrl(Uri.parse(url));
   request.headers.set('content-type', 'application/json');
