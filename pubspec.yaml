@@ -37,6 +37,7 @@ dev_dependencies:
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
   image_test_utils: ^1.0.0
+  carousel_pro: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -47,6 +48,14 @@ flutter:
   - assets/images/projeler_resim.jpg
   - assets/images/gama_holding_logo.jpg
   - assets/data.json
+  - assets/images/yapisletdevret_top.jpg
+  - assets/images/location.png
+  - assets/images/hand.png
+  - assets/images/time.png
+  - assets/images/money.png
+  - assets/images/client.png
+  - assets/images/contractor.png
+  - assets/images/estimated.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
