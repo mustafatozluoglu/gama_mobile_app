@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -50,7 +50,6 @@ flutter:
   - assets/images/projeler_resim.jpg
   - assets/images/gama_holding_logo.jpg
   - assets/data.json
-  - assets/images/yapisletdevret_top.jpg
   - assets/images/location.png
   - assets/images/hand.png
   - assets/images/time.png
@@ -58,6 +57,8 @@ flutter:
   - assets/images/client.png
   - assets/images/contractor.png
   - assets/images/estimated.png
+  - assets/images/bot_en_top.png
+  - assets/images/taahhut_en_top.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

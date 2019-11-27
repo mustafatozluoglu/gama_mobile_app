@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable(nullable: false)
-class Project {
+class ProjectCP {
   int ID;
   String post_author;
   String post_date;
@@ -23,7 +23,7 @@ class Project {
   List<Status> status;
   List<Gallery> gallery;
 
-  Project(
+  ProjectCP(
       {this.ID,
       this.post_author,
       this.post_date,
@@ -44,8 +44,8 @@ class Project {
       this.status,
       this.gallery});
 
-  factory Project.fromJson(Map<String, dynamic> json) {
-    return Project(
+  factory ProjectCP.fromJson(Map<String, dynamic> json) {
+    return ProjectCP(
         ID: json['ID'],
         post_author: json['post_author'],
         post_date: json['post_date'],
