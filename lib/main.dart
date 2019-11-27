@@ -7,6 +7,8 @@ import 'package:gama_app/entities/project.dart';
 import 'package:gama_app/entities/botProject.dart';
 import 'dart:async';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:x509csr/x509csr.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -339,18 +341,14 @@ class DetailProject extends State<SecondScreenProjeler> {
                       height: MediaQuery.of(context).size.height / 2,
                       child: new ClipRRect(
                         borderRadius: BorderRadius.circular(40.0),
-                        child: Carousel(
-                          boxFit: BoxFit.cover,
-                          images: [
-                            Image.network(widget.value.gallery[0].thumb),
-                            Image.network(widget.value.gallery[1].thumb),
-                            /*Image.network(widget.value.gallery[2].thumb),
-                            Image.network(widget.value.gallery[3].thumb),
-                            Image.network(widget.value.gallery[4].thumb),
-                            Image.network(widget.value.gallery[5].thumb),*/
-                          ],
-                          animationCurve: Curves.fastOutSlowIn,
-                          animationDuration: Duration(milliseconds: 2000),
+                        child: CarouselSlider(
+                          items: widget.value.gallery.map((it) {
+                            return new Container(
+                              margin: new EdgeInsets.symmetric(horizontal:5.0),
+                              child: new Image.network(it.thumb),
+                            );
+                          }).toList(),
+                          enableInfiniteScroll: false,
                         ),
                       ),
                     ),
