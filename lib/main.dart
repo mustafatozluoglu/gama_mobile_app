@@ -16,6 +16,7 @@ import 'package:x509csr/x509csr.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_test_utils/image_test_utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -39,40 +40,56 @@ class HomeScreen extends StatelessWidget {
           title: appBar,
           backgroundColor: Colors.white,
         ),
-        body: Column(children: [
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 75.0),
-            child: RaisedButton(
-                textColor: Colors.white,
-                color: Colors.blue[900],
-                child: Text("PROJELER"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProjelerScreen()),
-                  );
-                }), // button projeler
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 75.0),
-            child: RaisedButton(
-                textColor: Colors.white,
-                color: Colors.blue[900],
-                child: Text("IK"),
-                onPressed: () {}), // button ik
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 75.0),
-            child: RaisedButton(
-                textColor: Colors.white,
-                color: Colors.blue[900],
-                child: Text("GENEL BASVURU"),
-                onPressed: () {}), // button genel basvuru
-          )
-        ]),
+        body: Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 15.0),
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  textColor: Colors.white,
+                  color: Colors.blue[900],
+                  child: Text("PROJETS"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProjelerScreen()),
+                    );
+                  }), // button projeler
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 15.0),
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  textColor: Colors.white,
+                  color: Colors.blue[900],
+                  child: Text("HR"),
+                  onPressed: () {}), // button ik
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 15.0),
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  textColor: Colors.white,
+                  color: Colors.blue[900],
+                  child: Text("GENERAL APPLICATION"),
+                  onPressed: () {}), // button genel basvuru
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(0, 125, 0, 0),
+              child: Image.asset('assets/images/gama_iletisim.png'),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -91,9 +108,12 @@ class ProjelerScreen extends StatelessWidget {
             alignment: Alignment.center,
             margin: EdgeInsets.only(top: 75.0),
             child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 textColor: Colors.white,
                 color: Colors.blue[900],
-                child: Text("Taahhüt Projeleri"),
+                child: Text("CONTRACTING PROJECTS"),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -106,9 +126,12 @@ class ProjelerScreen extends StatelessWidget {
             alignment: Alignment.center,
             margin: EdgeInsets.only(top: 75.0),
             child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 textColor: Colors.white,
                 color: Colors.blue[900],
-                child: Text("Yap İşlet Devret"),
+                child: Text("BUILD OPERATE TRANSFER"),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -122,6 +145,3 @@ class ProjelerScreen extends StatelessWidget {
     );
   }
 }
-
-
-

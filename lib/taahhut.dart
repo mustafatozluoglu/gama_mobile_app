@@ -14,7 +14,6 @@ Image taahhut_en_top_pic = new Image(
   image: AssetImage('assets/images/taahhut_en_top.png'),
 );
 
-
 class TaahhutProjeleri extends StatelessWidget {
   final List<ProjectCP> projects;
 
@@ -27,9 +26,7 @@ class TaahhutProjeleri extends StatelessWidget {
         return Container(
           child: Column(
             children: <Widget>[
-              if (currentIndex == 0)                
-                  taahhut_en_top_pic,
-                
+              if (currentIndex == 0) taahhut_en_top_pic,
               Container(
                 child: createViewItem(projects[currentIndex], context),
               ),
@@ -247,10 +244,11 @@ class DetailProject extends State<SecondScreenProjeler> {
                           items: widget.value.gallery.map((it) {
                             return new Container(
                               margin: new EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(color: Colors.grey),
                               child: new Image.network(it.thumb),
                             );
                           }).toList(),
-                          enableInfiniteScroll: false,
+                          enableInfiniteScroll: true,
                         ),
                       ),
                     ),
@@ -325,7 +323,8 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
 
   List projects = json.decode(reply);
 
-  var list = projects.map((project) => new ProjectCP.fromJson(project)).toList();
+  var list =
+      projects.map((project) => new ProjectCP.fromJson(project)).toList();
 
   return list;
 }
