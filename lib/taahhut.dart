@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:gama_app/entities/projectCP.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 
 Image appBar = new Image(
   image: new ExactAssetImage("assets/images/gama_holding_logo.jpg"),
@@ -14,8 +15,14 @@ Image taahhut_en_top_pic = new Image(
   image: AssetImage('assets/images/taahhut_en_top.png'),
 );
 
+var allProjectsList;
+
+String searchValue = null;
+
+String dropdownStr = 'Batman Begins';
+
 class TaahhutProjeleri extends StatelessWidget {
-  final List<ProjectCP> projects;
+  List<ProjectCP> projects;
 
   TaahhutProjeleri(this.projects);
 
@@ -27,6 +34,96 @@ class TaahhutProjeleri extends StatelessWidget {
           child: Column(
             children: <Widget>[
               if (currentIndex == 0) taahhut_en_top_pic,
+              if (currentIndex == 0)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButton<String>(
+                    value: null,
+                    onChanged: (String newValue) {},
+                    items: [
+                      DropdownMenuItem(
+                        value: "1",
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Ongoing",
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "2",
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Completed",
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "3",
+                        child: DropdownButton<String>(
+                          value: null,
+                          onChanged: (String newValue) {},
+                          items: [
+                            DropdownMenuItem(
+                              value: "3_1",
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "GAMA Industry",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "3_2",
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "GAMA International",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "3_3",
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "GAMA Power",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (currentIndex == 0)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    style: new TextStyle(height: 1.0),
+                    onSubmitted: (value) {
+                      value = value.toLowerCase();
+                      searchValue = value;
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Search",
+                      hintText: "Search",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               Container(
                 child: createViewItem(projects[currentIndex], context),
               ),
@@ -40,13 +137,13 @@ class TaahhutProjeleri extends StatelessWidget {
   Widget createViewItem(ProjectCP project, BuildContext context) {
     return new ListTile(
       title: new Card(
-        elevation: 5.0,
+        elevation: 10.0,
         child: new Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blue[900]),
           ),
-          padding: EdgeInsets.all(20.0),
-          margin: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
               Padding(
@@ -242,10 +339,19 @@ class DetailProject extends State<SecondScreenProjeler> {
                         borderRadius: BorderRadius.circular(40.0),
                         child: CarouselSlider(
                           items: widget.value.gallery.map((it) {
+                            var img = "";
+                            if (it.thumb == null) {
+                              // no image
+                              img =
+                                  'https://static.thenounproject.com/png/1174579-200.png';
+                            } else {
+                              img = it.thumb;
+                            }
+
                             return new Container(
                               margin: new EdgeInsets.symmetric(horizontal: 5.0),
                               decoration: BoxDecoration(color: Colors.grey),
-                              child: new Image.network(it.thumb),
+                              child: new Image.network(img),
                             );
                           }).toList(),
                           enableInfiniteScroll: true,
@@ -323,10 +429,47 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
 
   List projects = json.decode(reply);
 
-  var list =
+  allProjectsList =
       projects.map((project) => new ProjectCP.fromJson(project)).toList();
 
-  return list;
+  if (searchValue != null && searchValue != "") {
+    allProjectsList = searchProjectGivenString(searchValue);
+    searchValue = null;
+  }
+
+  return allProjectsList;
+}
+
+Future<List<ProjectCP>> searchProjectGivenString(String s) async {
+  List<ProjectCP> findedProjects = new List();
+
+  for (ProjectCP p in allProjectsList) {
+    String post_date = p.post_date.toLowerCase();
+    String post_content = p.post_content.toLowerCase();
+    String post_title = p.post_title.toLowerCase();
+    String post_name = p.post_name.toLowerCase();
+    String post_city = p.meta_data[0].city.toLowerCase();
+    String post_year = p.meta_data[0].year.toLowerCase();
+    String post_main_contractor = p.meta_data[0].main_contractor.toLowerCase();
+    String post_country = p.country[0].name.toLowerCase();
+    String post_bussiness_line_name = p.business_line[0].name.toLowerCase();
+    String post_grouping_name = p.grouping[0].name.toLowerCase();
+
+    if (post_date.contains(s) ||
+        post_content.contains(s) ||
+        post_title.contains(s) ||
+        post_name.contains(s) ||
+        post_city.contains(s) ||
+        post_year.contains(s) ||
+        post_main_contractor.contains(s) ||
+        post_country.contains(s) ||
+        post_bussiness_line_name.contains(s) ||
+        post_grouping_name.contains(s)) {
+      findedProjects.add(p);
+    }
+  }
+
+  return findedProjects;
 }
 
 class Constants {
