@@ -46,7 +46,7 @@ dev_dependencies:
 
 flutter_icons:
   image_path: "assets/images/gama_app_logo.png"
-  android: true
+  android: "launcher_icon"
   ios: true
   
 
@@ -69,6 +69,10 @@ flutter:
   - assets/images/bot_en_top.png
   - assets/images/taahhut_en_top.png
   - assets/images/gama_iletisim.png
+  - assets/images/amount.png
+  - assets/images/man_hour.png
+  - assets/images/award.png
+  - assets/images/no_image.png
 
 
   # The following line ensures that the Material Icons font is

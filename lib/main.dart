@@ -30,8 +30,13 @@ Image appBar = new Image(
   height: 35.0,
 );
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   // This widget is the root application.
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -95,7 +100,12 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class ProjelerScreen extends StatelessWidget {
+class ProjelerScreen extends StatefulWidget {
+  @override
+  _ProjelerScreenState createState() => _ProjelerScreenState();
+}
+
+class _ProjelerScreenState extends State<ProjelerScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(

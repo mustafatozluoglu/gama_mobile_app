@@ -14,14 +14,19 @@ Image bot_en_top_pic = new Image(
 );
 
 
-class YapIsletDevret extends StatelessWidget {
+class YapIsletDevret extends StatefulWidget {
   final List<ProjectBOT> projects;
 
   YapIsletDevret(this.projects);
 
+  @override
+  _YapIsletDevretState createState() => _YapIsletDevretState();
+}
+
+class _YapIsletDevretState extends State<YapIsletDevret> {
   Widget build(context) {
     return ListView.builder(
-      itemCount: projects.length,
+      itemCount: widget.projects.length,
       itemBuilder: (context, int currentIndex) {
         return Container(
           child: Column(
@@ -30,7 +35,7 @@ class YapIsletDevret extends StatelessWidget {
                   bot_en_top_pic,
                 
               Container(
-                child: createViewItem(projects[currentIndex], context),
+                child: createViewItem(widget.projects[currentIndex], context),
               ),
             ],
           ),
@@ -239,7 +244,12 @@ class DetailProjectBOT extends State<SecondScreenBOT> {
   }
 }
 
-class YapIsletDevretScreen extends StatelessWidget {
+class YapIsletDevretScreen extends StatefulWidget {
+  @override
+  _YapIsletDevretScreenState createState() => _YapIsletDevretScreenState();
+}
+
+class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
   String yap_islet_devret_URL =
       'https://udev.gama.com.tr/holding/wp-json/api/en/v1/bot/';
 

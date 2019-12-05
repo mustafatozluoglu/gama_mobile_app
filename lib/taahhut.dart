@@ -15,20 +15,83 @@ Image taahhut_en_top_pic = new Image(
   image: AssetImage('assets/images/taahhut_en_top.png'),
 );
 
+final List<String> countries = <String>[
+  'Countries',
+  'Turkey',
+  'Algeria',
+  'Azerbaijan',
+  'Bahrain',
+  'Bulgaria',
+  'Iraq',
+  'Ireland',
+  'Jordan',
+  'Kazakhstan',
+  'Latvia',
+  'Libya',
+  'Macedonia',
+  'Malaysia',
+  'Pakistan',
+  'Qatar',
+  'Russian Federation',
+  'Saudi Arabia',
+  'Syria',
+  'Tunisia',
+  'Turkmenistan',
+  'UAE',
+  'Ukraine',
+  'Uzbekistan',
+  'Yemen'
+];
+
+final List<String> regions = <String>[
+  'Regions',
+  'Europe',
+  'Middle East and North Africa',
+  'Rusia and CIS',
+  'South East Asia'
+];
+
+final List<String> business = <String>[
+  'Business Lines',
+  'Civil & Infrastructural Project',
+  'Power Plants',
+  'Oil & Gas Projects',
+  'Cement Plants',
+  'Petrochemical & Chemical Plants',
+  'Steel & Metallurgical Plants',
+  'Public Transportation Projects',
+  'Water & Sewage projects',
+  'Pipelines & Material Handling Systems',
+  'Steam Plants'
+];
+
+final List<String> companies = <String>[
+  'Companies',
+  'GAMA Industry',
+  'GAMA International',
+  'GAMA Power'
+];
+
+List<String> selected = <String>[];
+
 var allProjectsList;
 
 String searchValue = null;
 
-String dropdownStr = 'Batman Begins';
-
-class TaahhutProjeleri extends StatelessWidget {
+class TaahhutProjeleri extends StatefulWidget {
   List<ProjectCP> projects;
 
   TaahhutProjeleri(this.projects);
 
+  @override
+  _TaahhutProjeleriState createState() => _TaahhutProjeleriState();
+}
+
+class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
   Widget build(context) {
+    print(selected);
     return ListView.builder(
-      itemCount: projects.length,
+      itemCount: widget.projects.length,
       itemBuilder: (context, int currentIndex) {
         return Container(
           child: Column(
@@ -36,68 +99,198 @@ class TaahhutProjeleri extends StatelessWidget {
               if (currentIndex == 0) taahhut_en_top_pic,
               if (currentIndex == 0)
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownButton<String>(
-                    value: null,
-                    onChanged: (String newValue) {},
+                  padding: const EdgeInsets.all(1.0),
+                  child: DropdownButton(
+                    icon: Icon(
+                      Icons.dehaze,
+                      color: Colors.blue[900],
+                      size: 28.0,
+                    ),
+                    style: Theme.of(context).textTheme.body1,
+                    value: 'Filters',
+                    onChanged: (String newValue) {
+                      setState(() {
+                        if (selected.contains(newValue) ||
+                            newValue == 'Filters')
+                          selected.remove(newValue);
+                        else
+                          selected.add(newValue);
+                      });
+                    },
                     items: [
                       DropdownMenuItem(
-                        value: "1",
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Ongoing",
-                            ),
-                          ],
+                        value: "Filters",
+                        child: Text(
+                          "Filters",
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[900],
+                              fontSize: 14),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "2",
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Completed",
-                            ),
-                          ],
+                        value: "Ongoing",
+                        child: Text(
+                          "Ongoing",
+                          style: new TextStyle(fontSize: 12),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "3",
+                        value: "Completed",
+                        child: Text(
+                          "Completed",
+                          style: new TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "4",
                         child: DropdownButton<String>(
-                          value: null,
-                          onChanged: (String newValue) {},
-                          items: [
-                            DropdownMenuItem(
-                              value: "3_1",
+                          style: Theme.of(context).textTheme.body1,
+                          value: companies.first,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              if (selected.contains(newValue) ||
+                                  newValue == 'Companies')
+                                selected.remove(newValue);
+                              else
+                                selected.add(newValue);
+                            });
+                          },
+                          items: companies
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
+                                  Icon(
+                                    Icons.arrow_right,
+                                    color: selected.contains(value) &&
+                                            value != 'Companies'
+                                        ? null
+                                        : Colors.transparent,
+                                  ),
                                   Text(
-                                    "GAMA Industry",
+                                    value,
+                                    style: new TextStyle(fontSize: 12),
                                   ),
                                 ],
                               ),
-                            ),
-                            DropdownMenuItem(
-                              value: "3_2",
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "4",
+                        child: DropdownButton<String>(
+                          style: Theme.of(context).textTheme.body1,
+                          value: business.first,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              if (selected.contains(newValue) ||
+                                  newValue == 'Business Lines')
+                                selected.remove(newValue);
+                              else
+                                selected.add(newValue);
+                            });
+                          },
+                          items: business
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
                               child: Row(
                                 children: <Widget>[
+                                  Icon(
+                                    Icons.arrow_right,
+                                    color: selected.contains(value) &&
+                                            value != 'Business Lines'
+                                        ? null
+                                        : Colors.transparent,
+                                  ),
                                   Text(
-                                    "GAMA International",
+                                    value,
+                                    style: new TextStyle(fontSize: 12),
                                   ),
                                 ],
                               ),
-                            ),
-                            DropdownMenuItem(
-                              value: "3_3",
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "5",
+                        child: DropdownButton<String>(
+                          style: Theme.of(context).textTheme.body1,
+                          value: regions.first,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              if (selected.contains(newValue) ||
+                                  newValue == 'Regions')
+                                selected.remove(newValue);
+                              else
+                                selected.add(newValue);
+                            });
+                          },
+                          items: regions
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
+                                  Icon(
+                                    Icons.arrow_right,
+                                    color: selected.contains(value) &&
+                                            value != 'Regions'
+                                        ? null
+                                        : Colors.transparent,
+                                  ),
                                   Text(
-                                    "GAMA Power",
+                                    value,
+                                    style: new TextStyle(fontSize: 12),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "6",
+                        child: DropdownButton<String>(
+                          style: Theme.of(context).textTheme.body1,
+                          value: countries.first,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              if (selected.contains(newValue) ||
+                                  newValue == 'Countries')
+                                selected.remove(newValue);
+                              else
+                                selected.add(newValue);
+                            });
+                          },
+                          items: countries
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.arrow_right,
+                                    color: selected.contains(value) &&
+                                            value != 'Countries'
+                                        ? null
+                                        : Colors.transparent,
+                                  ),
+                                  Text(
+                                    value,
+                                    style: new TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                     ],
@@ -105,12 +298,13 @@ class TaahhutProjeleri extends StatelessWidget {
                 ),
               if (currentIndex == 0)
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: TextField(
                     style: new TextStyle(height: 1.0),
                     onSubmitted: (value) {
                       value = value.toLowerCase();
                       searchValue = value;
+                      value = '';
                     },
                     decoration: InputDecoration(
                       labelText: "Search",
@@ -125,7 +319,7 @@ class TaahhutProjeleri extends StatelessWidget {
                   ),
                 ),
               Container(
-                child: createViewItem(projects[currentIndex], context),
+                child: createViewItem(widget.projects[currentIndex], context),
               ),
             ],
           ),
@@ -326,12 +520,80 @@ class DetailProject extends State<SecondScreenProjeler> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Expanded(
-                            child: Text(widget.value.meta_data[0].expected_end))
+                        if (widget.value.meta_data[0].expected_end != "")
+                          Expanded(
+                            child: Text(widget.value.meta_data[0].expected_end),
+                          )
+                        else
+                          Expanded(
+                            child: Text(widget.value.meta_data[0].duration),
+                          )
                       ],
                     ),
                     padding: EdgeInsets.all(20.0),
                   ),
+                  if (widget.value.meta_data[0].price != "")
+                    Padding(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/amount.png',
+                            height: 30,
+                          ),
+                          Text(
+                            '  Project Amount : ',
+                            style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(child: Text(widget.value.meta_data[0].price))
+                        ],
+                      ),
+                      padding: EdgeInsets.all(20.0),
+                    ),
+                  if (widget.value.meta_data[0].man_hour != "")
+                    Padding(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/man_hour.png',
+                            height: 30,
+                          ),
+                          Text(
+                            '  Man-Hour : ',
+                            style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                              child: Text(widget.value.meta_data[0].man_hour))
+                        ],
+                      ),
+                      padding: EdgeInsets.all(20.0),
+                    ),
+                  if (widget.value.meta_data[0].awards.length != 0)
+                    Padding(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/award.png',
+                            height: 30,
+                          ),
+                          Text(
+                            '  Award : ',
+                            style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                              child: Text(widget.value.meta_data[0].awards[0]))
+                        ],
+                      ),
+                      padding: EdgeInsets.all(20.0),
+                    ),
                   Padding(
                     child: Container(
                       height: MediaQuery.of(context).size.height / 2,
@@ -339,20 +601,20 @@ class DetailProject extends State<SecondScreenProjeler> {
                         borderRadius: BorderRadius.circular(40.0),
                         child: CarouselSlider(
                           items: widget.value.gallery.map((it) {
-                            var img = "";
-                            if (it.thumb == null) {
-                              // no image
-                              img =
-                                  'https://static.thenounproject.com/png/1174579-200.png';
-                            } else {
-                              img = it.thumb;
-                            }
-
-                            return new Container(
-                              margin: new EdgeInsets.symmetric(horizontal: 5.0),
-                              decoration: BoxDecoration(color: Colors.grey),
-                              child: new Image.network(img),
-                            );
+                            return it.thumb == null
+                                ? new Container(
+                                    margin: new EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                    child: new Image.asset(
+                                        'assets/images/no_image.png'))
+                                : new Container(
+                                    margin: new EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    decoration:
+                                        BoxDecoration(color: Colors.grey),
+                                    child: new Image.network(it.thumb));
                           }).toList(),
                           enableInfiniteScroll: true,
                         ),
@@ -370,12 +632,18 @@ class DetailProject extends State<SecondScreenProjeler> {
   }
 }
 
-class TaahhutProjeleriScreen extends StatelessWidget {
+class TaahhutProjeleriScreen extends StatefulWidget {
+  @override
+  _TaahhutProjeleriScreenState createState() => _TaahhutProjeleriScreenState();
+}
+
+class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
   String taahhut_projeleri_URL =
       'https://udev.gama.com.tr/holding/wp-json/api/en/v1/projects';
 
   @override
   Widget build(BuildContext context) {
+    selected = []; // clear list before starting taahhut screen
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
@@ -466,6 +734,40 @@ Future<List<ProjectCP>> searchProjectGivenString(String s) async {
         post_bussiness_line_name.contains(s) ||
         post_grouping_name.contains(s)) {
       findedProjects.add(p);
+    }
+  }
+
+  return findedProjects;
+}
+
+Future<List<ProjectCP>> searchProjectGivenFilters(
+    List<String> filtersList) async {
+  List<ProjectCP> findedProjects = new List();
+
+  for (ProjectCP p in allProjectsList) {
+    for (String filter in filtersList) {
+      filter = filter.toLowerCase();
+
+      String ongoing = p.status[0].name.toLowerCase();
+      String company = p.grouping[0].name.toLowerCase();
+      String business = p.business_line[0].name.toLowerCase();
+      String region;
+
+      int regionNo = p.country[0].parent;
+      if (regionNo == 1110) region = 'Europe';
+      if (regionNo == 1114) region = 'Middle East and North Africa';
+      if (regionNo == 1118) region = 'Rusia and CIS';
+      if (regionNo == 1122) region = 'South East Asia';
+
+      String country = p.country[0].name.toLowerCase();
+
+      if (ongoing.contains(filter) ||
+          company.contains(filter) ||
+          business.contains(filter) ||
+          region.contains(filter) ||
+          country.contains(filter)) {
+        findedProjects.add(p);
+      }
     }
   }
 
