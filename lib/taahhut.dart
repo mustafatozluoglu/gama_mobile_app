@@ -113,7 +113,15 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         if (selected.contains(newValue) ||
                             newValue == 'Filters')
                           selected.remove(newValue);
-                        else
+                        else if ((selected.contains('Ongoing') &&
+                            newValue == 'Completed')) {
+                          selected.remove('Ongoing');
+                          selected.add('Completed');
+                        } else if ((selected.contains('Completed') &&
+                            newValue == 'Ongoing')) {
+                          selected.remove('Completed');
+                          selected.add('Ongoing');
+                        } else
                           selected.add(newValue);
                       });
                     },
@@ -751,8 +759,8 @@ Future<List<ProjectCP>> searchProjectGivenFilters(
       String ongoing = p.status[0].name.toLowerCase();
       String company = p.grouping[0].name.toLowerCase();
       String business = p.business_line[0].name.toLowerCase();
-      String region;
 
+      String region;
       int regionNo = p.country[0].parent;
       if (regionNo == 1110) region = 'Europe';
       if (regionNo == 1114) region = 'Middle East and North Africa';
