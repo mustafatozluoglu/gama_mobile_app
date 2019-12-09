@@ -76,7 +76,7 @@ List<String> selected = <String>[];
 
 var allProjectsList;
 
-String searchValue = null;
+String searchValue;
 
 class TaahhutProjeleri extends StatefulWidget {
   List<ProjectCP> projects;
@@ -89,7 +89,6 @@ class TaahhutProjeleri extends StatefulWidget {
 
 class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
   Widget build(context) {
-    print(selected);
     return ListView.builder(
       itemCount: widget.projects.length,
       itemBuilder: (context, int currentIndex) {
@@ -99,7 +98,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
               if (currentIndex == 0) taahhut_en_top_pic,
               if (currentIndex == 0)
                 Padding(
-                  padding: const EdgeInsets.all(1.0),
+                  padding: const EdgeInsets.all(0.0),
                   child: DropdownButton(
                     icon: Icon(
                       Icons.dehaze,
@@ -151,7 +150,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "4",
+                        value: "Companies",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
                           value: companies.first,
@@ -189,7 +188,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "4",
+                        value: "Business Lines",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
                           value: business.first,
@@ -226,7 +225,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "5",
+                        value: "Regions",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
                           value: regions.first,
@@ -264,7 +263,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "6",
+                        value: "Countries",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
                           value: countries.first,
@@ -306,10 +305,22 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                 ),
               if (currentIndex == 0)
                 Padding(
+                  child: Column(
+                    children: <Widget>[
+                      for (String item in selected)
+                        Chip(
+                          label: Text(item),
+                        ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                ),
+              if (currentIndex == 0)
+                Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: TextField(
                     style: new TextStyle(height: 1.0),
-                    onSubmitted: (value) {
+                    onChanged: (value) {
                       value = value.toLowerCase();
                       searchValue = value;
                       value = '';
@@ -652,23 +663,12 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
   @override
   Widget build(BuildContext context) {
     selected = []; // clear list before starting taahhut screen
+
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
           title: appBar,
           backgroundColor: Colors.white,
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              itemBuilder: (BuildContext context) {
-                return Constants.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
-          ],
           iconTheme: IconThemeData(
             color: Colors.blue[900],
           ),
@@ -709,8 +709,14 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
       projects.map((project) => new ProjectCP.fromJson(project)).toList();
 
   if (searchValue != null && searchValue != "") {
-    allProjectsList = searchProjectGivenString(searchValue);
-    searchValue = null;
+    Future<List<ProjectCP>> l =
+        searchProjectGivenString(searchValue);
+    searchValue = null; // For starting projects page
+    return l;
+  }
+
+  if (selected.isNotEmpty) {
+    return searchProjectGivenFilters(selected);
   }
 
   return allProjectsList;
@@ -780,12 +786,4 @@ Future<List<ProjectCP>> searchProjectGivenFilters(
   }
 
   return findedProjects;
-}
-
-class Constants {
-  static const String projeler = 'Projeler';
-  static const String ik = 'IK';
-  static const String genelBasvuru = 'Genel Başvuru';
-
-  static const List<String> choices = <String>[projeler, ik, genelBasvuru];
 }

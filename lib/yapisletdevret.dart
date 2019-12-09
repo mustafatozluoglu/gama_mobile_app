@@ -13,7 +13,6 @@ Image bot_en_top_pic = new Image(
   image: AssetImage('assets/images/bot_en_top.png'),
 );
 
-
 class YapIsletDevret extends StatefulWidget {
   final List<ProjectBOT> projects;
 
@@ -31,9 +30,7 @@ class _YapIsletDevretState extends State<YapIsletDevret> {
         return Container(
           child: Column(
             children: <Widget>[
-              if (currentIndex == 0)                
-                  bot_en_top_pic,
-                
+              if (currentIndex == 0) bot_en_top_pic,
               Container(
                 child: createViewItem(widget.projects[currentIndex], context),
               ),
@@ -47,7 +44,7 @@ class _YapIsletDevretState extends State<YapIsletDevret> {
   Widget createViewItem(ProjectBOT project, BuildContext context) {
     return new ListTile(
       title: new Card(
-        elevation: 5.0,
+        elevation: 10.0,
         child: new Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blue[900]),
@@ -253,6 +250,14 @@ class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
   String yap_islet_devret_URL =
       'https://udev.gama.com.tr/holding/wp-json/api/en/v1/bot/';
 
+  int _selectedIndex = 0;
+  
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -260,18 +265,6 @@ class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
         appBar: new AppBar(
           title: appBar,
           backgroundColor: Colors.white,
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              itemBuilder: (BuildContext context) {
-                return Constants.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
-          ],
           iconTheme: IconThemeData(
             color: Colors.blue[900],
           ),
@@ -290,19 +283,29 @@ class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
             },
           ),
         ),
+        /*bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text('HOME'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              title: Text('CP'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school),
+              title: Text('BOT'),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue[900],
+          onTap: _onItemTapped,
+        ),*/
       ),
     );
   }
 }
-
-class Constants {
-  static const String projeler = 'Projeler';
-  static const String ik = 'IK';
-  static const String genelBasvuru = 'Genel Başvuru';
-
-  static const List<String> choices = <String>[projeler, ik, genelBasvuru];
-}
-
 
 Future<List<ProjectBOT>> downloadJSONforBOT(String url) async {
   HttpClient client = new HttpClient();
@@ -319,4 +322,3 @@ Future<List<ProjectBOT>> downloadJSONforBOT(String url) async {
 
   return projects.map((project) => new ProjectBOT.fromJson(project)).toList();
 }
-

@@ -11,15 +11,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:gama_app/taahhut.dart';
+import 'package:gama_app/taahhut.dart' as prefix0;
 import 'package:gama_app/yapisletdevret.dart';
+import 'package:gama_app/yapisletdevret.dart' as prefix1;
 import 'package:x509csr/x509csr.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_test_utils/image_test_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
+import 'package:custom_navigator/custom_navigator.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'GAMA_APP',
     home: HomeScreen(),
   ));
@@ -46,17 +50,29 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
         ),
         body: Column(
-          children: [
+          children: <Widget>[
+            Container(
+              child: Text('Projects'),
+              margin: const EdgeInsets.only(top: 5.0),
+            ),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 15.0),
+              margin: EdgeInsets.only(top: 1.0),
               child: RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: Colors.blue[900],
+                    ),
                   ),
                   textColor: Colors.white,
-                  color: Colors.blue[900],
-                  child: Text("PROJETS"),
+                  color: Colors.white,
+                  child: Image.asset(
+                    'assets/images/projeler_resim.jpg',
+                    width: 300,
+                    height: 75,
+                    fit: BoxFit.fill,
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -65,32 +81,56 @@ class _HomeScreenState extends State<HomeScreen> {
                   }), // button projeler
             ),
             Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 15.0),
-              child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  textColor: Colors.white,
-                  color: Colors.blue[900],
-                  child: Text("HR"),
-                  onPressed: () {}), // button ik
+              child: Text('Human Resources'),
+              margin: const EdgeInsets.only(top: 15.0),
             ),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 15.0),
+              margin: EdgeInsets.only(top: 1.0),
               child: RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: Colors.blue[900],
+                    ),
                   ),
                   textColor: Colors.white,
-                  color: Colors.blue[900],
-                  child: Text("GENERAL APPLICATION"),
+                  color: Colors.white,
+                  child: Image.asset(
+                    'assets/images/human_resources.jpg',
+                    width: 300,
+                    height: 75,
+                    fit: BoxFit.fill,
+                  ),
+                  onPressed: () {}), // button ik
+            ),
+            Container(
+              child: Text('General Application'),
+              margin: const EdgeInsets.only(top: 15.0),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 1.0),
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: Colors.blue[900],
+                    ),
+                  ),
+                  textColor: Colors.white,
+                  color: Colors.white,
+                  child: Image.asset(
+                    'assets/images/general_application.jpg',
+                    width: 300,
+                    height: 75,
+                    fit: BoxFit.fill,
+                  ),
                   onPressed: () {}), // button genel basvuru
             ),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(0, 125, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
               child: Image.asset('assets/images/gama_iletisim.png'),
             )
           ],
@@ -113,45 +153,126 @@ class _ProjelerScreenState extends State<ProjelerScreen> {
           title: appBar,
           backgroundColor: Colors.white,
         ),
-        body: Column(children: [
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 75.0),
-            child: RaisedButton(
+        body: Column(
+          children: <Widget>[
+            Container(
+              child: Text('Constracting Projects'),
+              margin: const EdgeInsets.only(top: 25.0),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(10, 1, 10, 0),
+              child: RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Colors.blue[900],
+                  ),
                 ),
                 textColor: Colors.white,
-                color: Colors.blue[900],
-                child: Text("CONTRACTING PROJECTS"),
+                color: Colors.white,
+                child: Image.asset(
+                  'assets/images/projeler_resim.jpg',
+                  height: 150,
+                  fit: BoxFit.fill,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => TaahhutProjeleriScreen()),
                   );
-                }), // button taahhut projeleri
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 75.0),
-            child: RaisedButton(
+                },
+              ),
+            ),
+            Container(
+              child: Text('Build Operateand Transfer Projects'),
+              margin: const EdgeInsets.only(top: 45.0),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(10, 1, 10, 0),
+              child: RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Colors.blue[900],
+                  ),
                 ),
                 textColor: Colors.white,
-                color: Colors.blue[900],
-                child: Text("BUILD OPERATE TRANSFER"),
+                color: Colors.white,
+                child: Image.asset(
+                  'assets/images/yapisletdevret.jpg',
+                  height: 150,
+                  fit: BoxFit.fill,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => YapIsletDevretScreen()),
                   );
-                }), // button yap islet devret
-          )
-        ]),
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
+/**
+ ** NAVIGATION BAR **
+ 
+
+class MyBottomNavigationBar extends StatefulWidget {
+  @override
+  _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
+}
+
+class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    HomeScreen(),
+    TaahhutProjeleriScreen(),
+    YapIsletDevretScreen(),
+  ];
+
+  void onTappedBar(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: _children[_currentIndex],
+      bottomNavigationBar: SizedBox(
+        child: BottomNavigationBar(
+          onTap: onTappedBar,
+          currentIndex: _currentIndex,
+          fixedColor: Colors.blue[900],
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.home,
+              ),
+              title: new Text('HOME'),
+            ),
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.store),
+              title: new Text('CP'),
+            ),
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.business),
+              title: new Text('BOT'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+*/

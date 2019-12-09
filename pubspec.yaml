@@ -31,6 +31,8 @@ dependencies:
   dots_indicator: ^1.0.0
   sqflite: ^1.1.7+3
   dio: ^3.0.7
+  curved_navigation_bar: ^0.3.1
+  custom_navigator: ^0.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -73,6 +75,9 @@ flutter:
   - assets/images/man_hour.png
   - assets/images/award.png
   - assets/images/no_image.png
+  - assets/images/human_resources.jpg  
+  - assets/images/general_application.jpg
+  - assets/images/yapisletdevret.jpg
 
 
   # The following line ensures that the Material Icons font is
