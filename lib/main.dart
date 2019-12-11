@@ -10,6 +10,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:gama_app/generalApplication.dart';
 import 'package:gama_app/taahhut.dart';
 import 'package:gama_app/taahhut.dart' as prefix0;
 import 'package:gama_app/yapisletdevret.dart';
@@ -20,12 +21,13 @@ import 'package:image_test_utils/image_test_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:custom_navigator/custom_navigator.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'GAMA_APP',
-    home: HomeScreen(),
+    home: new HomeScreen(),
   ));
 }
 
@@ -126,7 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 75,
                     fit: BoxFit.fill,
                   ),
-                  onPressed: () {}), // button genel basvuru
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GeneralApplicationScreen()),
+                    );
+                  }), // button genel basvuru
             ),
             Container(
               alignment: Alignment.center,
@@ -186,7 +193,7 @@ class _ProjelerScreenState extends State<ProjelerScreen> {
               ),
             ),
             Container(
-              child: Text('Build Operateand Transfer Projects'),
+              child: Text('Build Operate and Transfer Projects'),
               margin: const EdgeInsets.only(top: 45.0),
             ),
             Container(

@@ -72,7 +72,11 @@ final List<String> companies = <String>[
   'GAMA Power'
 ];
 
-List<String> selected = <String>[];
+List<String> selectedFilters = <String>[];
+List<String> selectedCompanies = <String>[];
+List<String> selectedBusiness = <String>[];
+List<String> selectedRegions = <String>[];
+List<String> selectedCountries = <String>[];
 
 var allProjectsList;
 
@@ -109,19 +113,20 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                     value: 'Filters',
                     onChanged: (String newValue) {
                       setState(() {
-                        if (selected.contains(newValue) ||
+                        if (selectedFilters.contains(newValue) ||
                             newValue == 'Filters')
-                          selected.remove(newValue);
-                        else if ((selected.contains('Ongoing') &&
+                          selectedFilters.remove(newValue);
+                        else if ((selectedFilters.contains('Ongoing') &&
                             newValue == 'Completed')) {
-                          selected.remove('Ongoing');
-                          selected.add('Completed');
-                        } else if ((selected.contains('Completed') &&
+                          selectedFilters.remove('Ongoing');
+                          selectedFilters.add('Completed');
+                        } else if ((selectedFilters.contains('Completed') &&
                             newValue == 'Ongoing')) {
-                          selected.remove('Completed');
-                          selected.add('Ongoing');
+                          selectedFilters.remove('Completed');
+                          selectedFilters.add('Ongoing');
                         } else
-                          selected.add(newValue);
+                          selectedFilters.add(newValue);
+                        searchProjectGivenFilters();
                       });
                     },
                     items: [
@@ -156,11 +161,14 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                           value: companies.first,
                           onChanged: (String newValue) {
                             setState(() {
-                              if (selected.contains(newValue) ||
-                                  newValue == 'Companies')
-                                selected.remove(newValue);
-                              else
-                                selected.add(newValue);
+                              if (selectedCompanies.contains(newValue) ||
+                                  newValue == 'Companies') {
+                                selectedCompanies.remove(newValue);
+                                selectedFilters.remove(newValue);
+                              } else {
+                                selectedCompanies.add(newValue);
+                                selectedFilters.add(newValue);
+                              }
                             });
                           },
                           items: companies
@@ -172,7 +180,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                 children: <Widget>[
                                   Icon(
                                     Icons.arrow_right,
-                                    color: selected.contains(value) &&
+                                    color: selectedCompanies.contains(value) &&
                                             value != 'Companies'
                                         ? null
                                         : Colors.transparent,
@@ -194,11 +202,14 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                           value: business.first,
                           onChanged: (String newValue) {
                             setState(() {
-                              if (selected.contains(newValue) ||
-                                  newValue == 'Business Lines')
-                                selected.remove(newValue);
-                              else
-                                selected.add(newValue);
+                              if (selectedBusiness.contains(newValue) ||
+                                  newValue == 'Business Lines') {
+                                selectedBusiness.remove(newValue);
+                                selectedFilters.remove(newValue);
+                              } else {
+                                selectedBusiness.add(newValue);
+                                selectedFilters.add(newValue);
+                              }
                             });
                           },
                           items: business
@@ -209,7 +220,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                 children: <Widget>[
                                   Icon(
                                     Icons.arrow_right,
-                                    color: selected.contains(value) &&
+                                    color: selectedBusiness.contains(value) &&
                                             value != 'Business Lines'
                                         ? null
                                         : Colors.transparent,
@@ -231,11 +242,14 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                           value: regions.first,
                           onChanged: (String newValue) {
                             setState(() {
-                              if (selected.contains(newValue) ||
-                                  newValue == 'Regions')
-                                selected.remove(newValue);
-                              else
-                                selected.add(newValue);
+                              if (selectedRegions.contains(newValue) ||
+                                  newValue == 'Regions') {
+                                selectedRegions.remove(newValue);
+                                selectedFilters.remove(newValue);
+                              } else {
+                                selectedRegions.add(newValue);
+                                selectedFilters.add(newValue);
+                              }
                             });
                           },
                           items: regions
@@ -247,7 +261,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                 children: <Widget>[
                                   Icon(
                                     Icons.arrow_right,
-                                    color: selected.contains(value) &&
+                                    color: selectedRegions.contains(value) &&
                                             value != 'Regions'
                                         ? null
                                         : Colors.transparent,
@@ -269,11 +283,14 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                           value: countries.first,
                           onChanged: (String newValue) {
                             setState(() {
-                              if (selected.contains(newValue) ||
-                                  newValue == 'Countries')
-                                selected.remove(newValue);
-                              else
-                                selected.add(newValue);
+                              if (selectedCountries.contains(newValue) ||
+                                  newValue == 'Countries') {
+                                selectedCountries.remove(newValue);
+                                selectedFilters.remove(newValue);
+                              } else {
+                                selectedCountries.add(newValue);
+                                selectedFilters.add(newValue);
+                              }
                             });
                           },
                           items: countries
@@ -285,7 +302,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                 children: <Widget>[
                                   Icon(
                                     Icons.arrow_right,
-                                    color: selected.contains(value) &&
+                                    color: selectedCountries.contains(value) &&
                                             value != 'Countries'
                                         ? null
                                         : Colors.transparent,
@@ -307,7 +324,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                 Padding(
                   child: Column(
                     children: <Widget>[
-                      for (String item in selected)
+                      for (String item in selectedFilters)
                         Chip(
                           label: Text(item),
                         ),
@@ -662,7 +679,11 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
 
   @override
   Widget build(BuildContext context) {
-    selected = []; // clear list before starting taahhut screen
+    selectedFilters = []; // clear list before starting taahhut screen
+    selectedCompanies = [];
+    selectedBusiness = [];
+    selectedRegions = [];
+    selectedCountries = [];
 
     return new MaterialApp(
       home: new Scaffold(
@@ -709,20 +730,19 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
       projects.map((project) => new ProjectCP.fromJson(project)).toList();
 
   if (searchValue != null && searchValue != "") {
-    Future<List<ProjectCP>> l =
-        searchProjectGivenString(searchValue);
-    searchValue = null; // For starting projects page
-    return l;
+    List<ProjectCP> l = searchProjectGivenString(searchValue);
+    searchValue = null; // For starting constracting projects page
+    if (l.isNotEmpty) return l;
   }
 
-  if (selected.isNotEmpty) {
-    return searchProjectGivenFilters(selected);
+  if (selectedFilters.isNotEmpty) {
+    return searchProjectGivenFilters();
   }
 
   return allProjectsList;
 }
 
-Future<List<ProjectCP>> searchProjectGivenString(String s) async {
+List<ProjectCP> searchProjectGivenString(String s) {
   List<ProjectCP> findedProjects = new List();
 
   for (ProjectCP p in allProjectsList) {
@@ -754,36 +774,96 @@ Future<List<ProjectCP>> searchProjectGivenString(String s) async {
   return findedProjects;
 }
 
-Future<List<ProjectCP>> searchProjectGivenFilters(
-    List<String> filtersList) async {
+Future<List<ProjectCP>> searchProjectGivenFilters() async {
   List<ProjectCP> findedProjects = new List();
+  List<ProjectCP> findedProjects2 = new List();
+  List<ProjectCP> findedProjects3 = new List();
+  List<ProjectCP> findedProjectsStatus = new List();
+  List<ProjectCP> findedProjectsCompanies = new List();
+  List<ProjectCP> findedProjectsBusiness = new List();
+  List<ProjectCP> findedProjectsRegions = new List();
+  List<ProjectCP> findedProjectsCountries = new List();
 
   for (ProjectCP p in allProjectsList) {
-    for (String filter in filtersList) {
-      filter = filter.toLowerCase();
+    String status = p.status[0].name; // ongoing or complete
+    String company = p.grouping[0].name;
+    String business = p.business_line[0].name;
 
-      String ongoing = p.status[0].name.toLowerCase();
-      String company = p.grouping[0].name.toLowerCase();
-      String business = p.business_line[0].name.toLowerCase();
+    String region;
+    int regionNo = p.country[0].parent;
+    if (regionNo == 1110) region = 'Europe';
+    if (regionNo == 1114) region = 'Middle East and North Africa';
+    if (regionNo == 1118) region = 'Rusia and CIS';
+    if (regionNo == 1122) region = 'South East Asia';
 
-      String region;
-      int regionNo = p.country[0].parent;
-      if (regionNo == 1110) region = 'Europe';
-      if (regionNo == 1114) region = 'Middle East and North Africa';
-      if (regionNo == 1118) region = 'Rusia and CIS';
-      if (regionNo == 1122) region = 'South East Asia';
+    String country = p.country[0].name;
 
-      String country = p.country[0].name.toLowerCase();
+    if (status == 'Ongoing') {
+      if (selectedFilters.contains('Ongoing')) {
+        findedProjectsStatus.add(p);
+      }
+    }
 
-      if (ongoing.contains(filter) ||
-          company.contains(filter) ||
-          business.contains(filter) ||
-          region.contains(filter) ||
-          country.contains(filter)) {
-        findedProjects.add(p);
+    if (status == 'Completed') {
+      if (selectedFilters.contains('Completed')) {
+        findedProjectsStatus.add(p);
+      }
+    }
+
+    if (selectedCompanies.contains(company)) {
+      findedProjectsCompanies.add(p);
+    }
+
+    if (selectedBusiness.contains(business)) {
+      findedProjectsBusiness.add(p);
+    }
+
+    if (selectedRegions.contains(region)) {
+      findedProjectsRegions.add(p);
+    }
+
+    if (selectedCountries.contains(country)) {
+      findedProjectsCountries.add(p);
+    }
+  }
+
+  
+
+  if (findedProjectsStatus.isNotEmpty) {
+    for (ProjectCP p in findedProjectsStatus) {
+      findedProjects.add(p);
+    }
+  }
+
+  if (findedProjectsCompanies.isNotEmpty) {
+    for (int i = 0; i < findedProjectsCompanies.length; i++) {
+      ProjectCP p1 = findedProjectsCompanies[i];
+      for (int j = 0; j < findedProjects.length; j++) {
+        ProjectCP p2 = findedProjects[j];
+        if (p1.post_name == p2.post_name) {
+          findedProjects2.add(p1);
+          continue;
+        }
       }
     }
   }
+
+  if (findedProjectsBusiness.isNotEmpty) {
+    for (int i = 0; i < findedProjectsBusiness.length; i++) {
+      ProjectCP p1 = findedProjectsBusiness[i];
+      for (int j = 0; j < findedProjects2.length; j++) {
+        ProjectCP p2 = findedProjects2[j];
+        if (p1.post_name == p2.post_name) {
+          findedProjects3.add(p1);
+          continue;
+        }
+      }
+    }
+  }
+
+
+  for(ProjectCP p in findedProjects3)
+    print(p.post_name);
 
   return findedProjects;
 }
