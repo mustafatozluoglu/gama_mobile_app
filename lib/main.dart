@@ -31,8 +31,13 @@ void main() {
   ));
 }
 
-Image appBar = new Image(
-  image: new ExactAssetImage("assets/images/gama_holding_logo.jpg"),
+Image appBarTr = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_tr.png"),
+  height: 35.0,
+);
+
+Image appBarEn = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_en.png"),
   height: 35.0,
 );
 
@@ -43,18 +48,44 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isEng = true;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: appBar,
+          title: isEng ? appBarEn : appBarTr,
           backgroundColor: Colors.white,
+          actions: <Widget>[
+            Container(
+              child: Text(
+                'TR',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+            Switch(
+              activeColor: Colors.blue[900],
+              inactiveThumbColor: Colors.red[900],
+              inactiveTrackColor: Colors.red[400],
+              onChanged: (val) => setState(() => isEng = val),
+              value: isEng,
+            ),
+            Container(
+              child: Text(
+                'EN',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+          ],
         ),
         body: Column(
           children: <Widget>[
             Container(
-              child: Text('Projects'),
+              child: Text(isEng ? 'Projects' : 'Projeler'),
               margin: const EdgeInsets.only(top: 5.0),
             ),
             Container(
@@ -83,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }), // button projeler
             ),
             Container(
-              child: Text('Human Resources'),
+              child: Text(isEng ? 'Human Resources' : 'İnsan Kaynakları'),
               margin: const EdgeInsets.only(top: 15.0),
             ),
             Container(
@@ -107,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {}), // button ik
             ),
             Container(
-              child: Text('General Application'),
+              child: Text(isEng ? 'General Application' : 'Genel Başvuru'),
               margin: const EdgeInsets.only(top: 15.0),
             ),
             Container(
@@ -131,7 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => GeneralApplicationScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => GeneralApplicationScreen()),
                     );
                   }), // button genel basvuru
             ),
@@ -153,17 +185,63 @@ class ProjelerScreen extends StatefulWidget {
 }
 
 class _ProjelerScreenState extends State<ProjelerScreen> {
+  bool isEng = true;
+
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: new AppBar(
-          title: appBar,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.blue[900],
+          ),
           backgroundColor: Colors.white,
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                child: isEng ? appBarEn : appBarTr,
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              child: Text(
+                'TR',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+            Switch(
+              activeColor: Colors.blue[900],
+              inactiveThumbColor: Colors.red[900],
+              inactiveTrackColor: Colors.red[400],
+              onChanged: (val) => setState(() => isEng = val),
+              value: isEng,
+            ),
+            Container(
+              child: Text(
+                'EN',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+          ],
         ),
         body: Column(
           children: <Widget>[
             Container(
-              child: Text('Constracting Projects'),
+              child:
+                  Text(isEng ? 'Constracting Projects' : 'Taahhüt Projeleri'),
               margin: const EdgeInsets.only(top: 25.0),
             ),
             Container(
@@ -193,7 +271,9 @@ class _ProjelerScreenState extends State<ProjelerScreen> {
               ),
             ),
             Container(
-              child: Text('Build Operate and Transfer Projects'),
+              child: Text(isEng
+                  ? 'Build Operate and Transfer Projects'
+                  : 'Yap İşlet Devret Projeleri'),
               margin: const EdgeInsets.only(top: 45.0),
             ),
             Container(

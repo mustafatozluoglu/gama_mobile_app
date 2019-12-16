@@ -2,20 +2,32 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:gama_app/entities/projectCP.dart';
 import 'dart:async';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter_multi_carousel/carousel.dart';
 
-Image appBar = new Image(
-  image: new ExactAssetImage("assets/images/gama_holding_logo.jpg"),
+import 'main.dart';
+
+Image appBarTr = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_tr.png"),
   height: 35.0,
 );
+
+Image appBarEn = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_en.png"),
+  height: 35.0,
+);
+
 Image taahhut_en_top_pic = new Image(
   image: AssetImage('assets/images/taahhut_en_top.png'),
 );
 
-final List<String> countries = <String>[
+Image taahhut_tr_top_pic = new Image(
+  image: AssetImage('assets/images/taahhut_tr_top.png'),
+);
+
+final List<String> countries_en = <String>[
   'Countries',
   'Turkey',
   'Algeria',
@@ -42,34 +54,105 @@ final List<String> countries = <String>[
   'Uzbekistan',
   'Yemen'
 ];
+final List<String> countries_tr = <String>[
+  'Ülkeler',
+  'Türkiye',
+  'Azerbaycan',
+  'Bahreyn',
+  'Birleşik Arap Emirlikleri',
+  'Bulgaristan',
+  'Cezayir',
+  'Irak',
+  'İrlanda',
+  'Katar',
+  'Kazakistan',
+  'Letonya',
+  'Libya',
+  'Makedonya',
+  'Malezya',
+  'Özbekistan',
+  'Pakistan',
+  'Rusya Federasyonu',
+  'Suriye',
+  'Suudi Arabistan',
+  'Tunus',
+  'Türkmenistan',
+  'Ukrayna',
+  'Ürdün',
+  'Yemen'
+];
 
-final List<String> regions = <String>[
+final List<String> regions_en = <String>[
   'Regions',
   'Europe',
   'Middle East and North Africa',
   'Rusia and CIS',
   'South East Asia'
 ];
+final List<String> regions_tr = <String>[
+  'Bölgeler',
+  'Avrupa',
+  'Güney Doğu Asya',
+  'Orta Doğu ve Kuzey Afrika',
+  'Rusya ve BDT',
+];
 
-final List<String> business = <String>[
+final List<String> business_en = <String>[
   'Business Lines',
-  'Civil & Infrastructural Project',
+  'Civil & Infrastructural Projects',
+  'Hospitals, Hotels, Residentials, Business & Shopping Centers',
+  'Factories',
+  'Highways',
+  'Dams',
   'Power Plants',
+  'Thermal Power Plants',
+  'Hydroelectric Power Plants',
   'Oil & Gas Projects',
+  'Refineries',
+  'Oil & Gas Processing Plants',
+  'LNG Plants',
   'Cement Plants',
   'Petrochemical & Chemical Plants',
   'Steel & Metallurgical Plants',
   'Public Transportation Projects',
-  'Water & Sewage projects',
+  'Water & Sewage Projects',
   'Pipelines & Material Handling Systems',
   'Steam Plants'
 ];
+final List<String> business_tr = <String>[
+  'Faaliyet Alanları',
+  'İnşaat ve Alt Yapı Projeleri',
+  'Hastaneler, Oteller, Konutlar, İş ve Alışveriş Merkezleri',
+  'Fabrikalar',
+  'Yol Projeleri',
+  'Barajlar',
+  'Güç Santralleri',
+  'Termik Güç Santralleri',
+  'Hidroelektrik Güç Santralleri',
+  'Petrol ve Gaz Projeleri',
+  'Rafineriler',
+  'Petrol ve Gaz İşleme Tesisleri',
+  'LNG Tesisleri',
+  'Çimento Fabrikaları',
+  'Petrokimya ve Kimya Tesisleri',
+  'Demir-Çelik ve Metalurji Tesisleri',
+  'Toplu Taşıma Projeleri',
+  'Su ve Atıksu Projeleri',
+  'Boru Hatları ve Nakil Sistemleri',
+  'Buhar Üretim Tesisleri'
+];
 
-final List<String> companies = <String>[
+final List<String> companies_en = <String>[
   'Companies',
   'GAMA Industry',
   'GAMA International',
   'GAMA Power'
+];
+final List<String> companies_tr = <String>[
+  'Şirketler',
+  'GAMA Endüstri',
+  'GAMA Güç',
+  'GAMA International'
 ];
 
 List<String> selectedFilters = <String>[];
@@ -81,6 +164,8 @@ List<String> selectedCountries = <String>[];
 var allProjectsList;
 
 String searchValue;
+
+bool isEng = true;
 
 class TaahhutProjeleri extends StatefulWidget {
   List<ProjectCP> projects;
@@ -99,7 +184,8 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
         return Container(
           child: Column(
             children: <Widget>[
-              if (currentIndex == 0) taahhut_en_top_pic,
+              if (currentIndex == 0)
+                isEng ? taahhut_en_top_pic : taahhut_tr_top_pic,
               if (currentIndex == 0)
                 Padding(
                   padding: const EdgeInsets.all(0.0),
@@ -110,11 +196,12 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                       size: 28.0,
                     ),
                     style: Theme.of(context).textTheme.body1,
-                    value: 'Filters',
+                    value: isEng ? 'Filters' : 'Filtreler',
                     onChanged: (String newValue) {
                       setState(() {
                         if (selectedFilters.contains(newValue) ||
-                            newValue == 'Filters')
+                            newValue == 'Filters' ||
+                            newValue == 'Filtreler')
                           selectedFilters.remove(newValue);
                         else if ((selectedFilters.contains('Ongoing') &&
                             newValue == 'Completed')) {
@@ -131,9 +218,9 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                     },
                     items: [
                       DropdownMenuItem(
-                        value: "Filters",
+                        value: isEng ? "Filters" : 'Filtreler',
                         child: Text(
-                          "Filters",
+                          isEng ? "Filters" : "Filtreler",
                           style: new TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue[900],
@@ -141,28 +228,30 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Ongoing",
+                        value: isEng ? "Ongoing" : "Devam Eden",
                         child: Text(
-                          "Ongoing",
+                          isEng ? "Ongoing" : "Devam Eden",
                           style: new TextStyle(fontSize: 12),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Completed",
+                        value: isEng ? "Completed" : "Tamamlanan",
                         child: Text(
-                          "Completed",
+                          isEng ? "Completed" : "Tamamlanan",
                           style: new TextStyle(fontSize: 12),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Companies",
+                        value: isEng ? "Companies" : "Şirketler",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
-                          value: companies.first,
+                          value:
+                              isEng ? companies_en.first : companies_tr.first,
                           onChanged: (String newValue) {
                             setState(() {
                               if (selectedCompanies.contains(newValue) ||
-                                  newValue == 'Companies') {
+                                  newValue == 'Companies' ||
+                                  newValue == 'Şirketler') {
                                 selectedCompanies.remove(newValue);
                                 selectedFilters.remove(newValue);
                               } else {
@@ -171,7 +260,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                               }
                             });
                           },
-                          items: companies
+                          items: (isEng ? companies_en : companies_tr)
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -181,7 +270,8 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                   Icon(
                                     Icons.arrow_right,
                                     color: selectedCompanies.contains(value) &&
-                                            value != 'Companies'
+                                            (value != 'Companies' ||
+                                                value != 'Şirketler')
                                         ? null
                                         : Colors.transparent,
                                   ),
@@ -196,14 +286,22 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Business Lines",
+                        value: isEng ? "Business Lines" : "Faaliyet Alanları",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
-                          value: business.first,
+                          value: isEng ? business_en.first : business_tr.first,
                           onChanged: (String newValue) {
                             setState(() {
                               if (selectedBusiness.contains(newValue) ||
-                                  newValue == 'Business Lines') {
+                                  newValue == 'Business Lines' ||
+                                  newValue ==
+                                      'Civil & Infrastructural Projects' ||
+                                  newValue == 'Power Plants' ||
+                                  newValue == 'Oil & Gas Projects' ||
+                                  newValue == 'Faaliyet Alanları' ||
+                                  newValue == 'İnşaat ve Alt Yapı Projeleri' ||
+                                  newValue == 'Güç Santralleri' ||
+                                  newValue == 'Petrol ve Gaz Projeleri') {
                                 selectedBusiness.remove(newValue);
                                 selectedFilters.remove(newValue);
                               } else {
@@ -212,7 +310,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                               }
                             });
                           },
-                          items: business
+                          items: (isEng ? business_en : business_tr)
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -221,13 +319,14 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                   Icon(
                                     Icons.arrow_right,
                                     color: selectedBusiness.contains(value) &&
-                                            value != 'Business Lines'
+                                            (value != 'Business Lines' ||
+                                                value != 'Faaliyet Alanları')
                                         ? null
                                         : Colors.transparent,
                                   ),
                                   Text(
                                     value,
-                                    style: new TextStyle(fontSize: 12),
+                                    style: new TextStyle(fontSize: 10.4),
                                   ),
                                 ],
                               ),
@@ -236,14 +335,15 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Regions",
+                        value: isEng ? "Regions" : "Bölgeler",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
-                          value: regions.first,
+                          value: isEng ? regions_en.first : regions_tr.first,
                           onChanged: (String newValue) {
                             setState(() {
                               if (selectedRegions.contains(newValue) ||
-                                  newValue == 'Regions') {
+                                  newValue == 'Regions' ||
+                                  newValue == 'Bölgeler') {
                                 selectedRegions.remove(newValue);
                                 selectedFilters.remove(newValue);
                               } else {
@@ -252,7 +352,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                               }
                             });
                           },
-                          items: regions
+                          items: (isEng ? regions_en : regions_tr)
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -262,7 +362,8 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                   Icon(
                                     Icons.arrow_right,
                                     color: selectedRegions.contains(value) &&
-                                            value != 'Regions'
+                                            (value != 'Regions' ||
+                                                value != 'Bölgeler')
                                         ? null
                                         : Colors.transparent,
                                   ),
@@ -277,14 +378,16 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                         ),
                       ),
                       DropdownMenuItem(
-                        value: "Countries",
+                        value: isEng ? "Countries" : "Ülkeler",
                         child: DropdownButton<String>(
                           style: Theme.of(context).textTheme.body1,
-                          value: countries.first,
+                          value:
+                              isEng ? countries_en.first : countries_tr.first,
                           onChanged: (String newValue) {
                             setState(() {
                               if (selectedCountries.contains(newValue) ||
-                                  newValue == 'Countries') {
+                                  newValue == 'Countries' ||
+                                  newValue == 'Ülkeler') {
                                 selectedCountries.remove(newValue);
                                 selectedFilters.remove(newValue);
                               } else {
@@ -293,7 +396,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                               }
                             });
                           },
-                          items: countries
+                          items: (isEng ? countries_en : countries_tr)
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -303,7 +406,8 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                                   Icon(
                                     Icons.arrow_right,
                                     color: selectedCountries.contains(value) &&
-                                            value != 'Countries'
+                                            (value != 'Countries' ||
+                                                value != 'Ülkeler')
                                         ? null
                                         : Colors.transparent,
                                   ),
@@ -343,8 +447,8 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                       value = '';
                     },
                     decoration: InputDecoration(
-                      labelText: "Search",
-                      hintText: "Search",
+                      labelText: isEng ? "Search" : "Arama",
+                      hintText: isEng ? "Search" : "Arama",
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -441,7 +545,7 @@ class DetailProject extends State<SecondScreenProjeler> {
       backgroundColor: Colors.white,
       appBar: new AppBar(
         iconTheme: IconThemeData(color: Colors.blue[900]),
-        title: appBar,
+        title: isEng ? appBarEn : appBarTr,
         backgroundColor: Colors.white,
       ),
       body: new ListView(
@@ -487,7 +591,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                           height: 30,
                         ),
                         Text(
-                          '  Location : ',
+                          isEng ? '  Location : ' : '  Lokasyon : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -509,7 +613,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                           height: 30,
                         ),
                         Text(
-                          '  Client : ',
+                          isEng ? '  Client : ' : '  İşveren : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -529,7 +633,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                           height: 30,
                         ),
                         Text(
-                          '  Contractor : ',
+                          isEng ? '  Contractor : ' : '  Genel Müteahhit : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -551,7 +655,9 @@ class DetailProject extends State<SecondScreenProjeler> {
                           height: 30,
                         ),
                         Text(
-                          '  Estimated Completion : ',
+                          isEng
+                              ? '  Estimated Completion : '
+                              : '  Tahmini Bitiş : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -578,7 +684,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                             height: 30,
                           ),
                           Text(
-                            '  Project Amount : ',
+                            isEng ? '  Project Amount : ' : '  Proje Bedeli : ',
                             style: new TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -598,7 +704,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                             height: 30,
                           ),
                           Text(
-                            '  Man-Hour : ',
+                            isEng ? '  Man-Hour : ' : '  Adam-Saat : ',
                             style: new TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -619,7 +725,7 @@ class DetailProject extends State<SecondScreenProjeler> {
                             height: 30,
                           ),
                           Text(
-                            '  Award : ',
+                            isEng ? '  Award : ' : '  Ödül : ',
                             style: new TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -632,28 +738,30 @@ class DetailProject extends State<SecondScreenProjeler> {
                     ),
                   Padding(
                     child: Container(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: new ClipRRect(
-                        borderRadius: BorderRadius.circular(40.0),
-                        child: CarouselSlider(
-                          items: widget.value.gallery.map((it) {
-                            return it.thumb == null
-                                ? new Container(
-                                    margin: new EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
-                                    child: new Image.asset(
-                                        'assets/images/no_image.png'))
-                                : new Container(
-                                    margin: new EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    decoration:
-                                        BoxDecoration(color: Colors.grey),
-                                    child: new Image.network(it.thumb));
-                          }).toList(),
-                          enableInfiniteScroll: true,
-                        ),
+                      child: Carousel(
+                        height: 350,
+                        width: 270,
+                        type: "simple",
+                        indicatorType: "dot",
+                        arrowColor: Colors.grey,
+                        axis: Axis.horizontal,
+                        showArrow: true,
+                        children: widget.value.gallery.map((it) {
+                          return it.thumb == null
+                              ? new Container(
+                                  margin:
+                                      new EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: new Image.asset(
+                                      'assets/images/no_image.png'))
+                              : new Container(
+                                  margin:
+                                      new EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: new Image.network(it.thumb));
+                        }).toList(),
                       ),
                     ),
                     padding: EdgeInsets.fromLTRB(20, 90, 20, 10),
@@ -674,8 +782,11 @@ class TaahhutProjeleriScreen extends StatefulWidget {
 }
 
 class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
-  String taahhut_projeleri_URL =
+  String taahhut_projeleri_URL_en =
       'https://udev.gama.com.tr/holding/wp-json/api/en/v1/projects';
+
+  String taahhut_projeleri_URL_tr =
+      'https://udev.gama.com.tr/holding/wp-json/api/tr/v1/projects';
 
   @override
   Widget build(BuildContext context) {
@@ -688,15 +799,53 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: appBar,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Colors.blue[900],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
           ),
+          iconTheme: IconThemeData(color: Colors.blue[900]),
+          backgroundColor: Colors.white,
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                child: isEng ? appBarEn : appBarTr,
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              child: Text(
+                'TR',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+            Switch(
+              activeColor: Colors.blue[900],
+              inactiveThumbColor: Colors.red[900],
+              inactiveTrackColor: Colors.red[400],
+              onChanged: (val) => setState(() => isEng = val),
+              value: isEng,
+            ),
+            Container(
+              child: Text(
+                'EN',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+          ],
         ),
         body: new Center(
           child: new FutureBuilder<List<ProjectCP>>(
-            future: downloadJSONforProjects(taahhut_projeleri_URL),
+            future: downloadJSONforProjects(
+                isEng ? taahhut_projeleri_URL_en : taahhut_projeleri_URL_tr),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<ProjectCP> projects = snapshot.data;
@@ -725,6 +874,9 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
   String reply = await response.transform(utf8.decoder).join();
 
   List projects = json.decode(reply);
+
+  /*final response = await rootBundle.loadString('assets/data.json');
+  List projects = json.decode(response);*/
 
   allProjectsList =
       projects.map((project) => new ProjectCP.fromJson(project)).toList();
@@ -776,8 +928,6 @@ List<ProjectCP> searchProjectGivenString(String s) {
 
 Future<List<ProjectCP>> searchProjectGivenFilters() async {
   List<ProjectCP> findedProjects = new List();
-  List<ProjectCP> findedProjects2 = new List();
-  List<ProjectCP> findedProjects3 = new List();
   List<ProjectCP> findedProjectsStatus = new List();
   List<ProjectCP> findedProjectsCompanies = new List();
   List<ProjectCP> findedProjectsBusiness = new List();
@@ -827,43 +977,23 @@ Future<List<ProjectCP>> searchProjectGivenFilters() async {
     }
   }
 
-  
+  findedProjects.addAll(findedProjectsStatus);
 
-  if (findedProjectsStatus.isNotEmpty) {
-    for (ProjectCP p in findedProjectsStatus) {
-      findedProjects.add(p);
-    }
-  }
+  for (ProjectCP p in findedProjectsCompanies)
+    if (!findedProjects.contains(p)) findedProjects.add(p);
 
-  if (findedProjectsCompanies.isNotEmpty) {
-    for (int i = 0; i < findedProjectsCompanies.length; i++) {
-      ProjectCP p1 = findedProjectsCompanies[i];
-      for (int j = 0; j < findedProjects.length; j++) {
-        ProjectCP p2 = findedProjects[j];
-        if (p1.post_name == p2.post_name) {
-          findedProjects2.add(p1);
-          continue;
-        }
-      }
-    }
-  }
+  for (ProjectCP p in findedProjectsBusiness)
+    if (!findedProjects.contains(p)) findedProjects.add(p);
 
-  if (findedProjectsBusiness.isNotEmpty) {
-    for (int i = 0; i < findedProjectsBusiness.length; i++) {
-      ProjectCP p1 = findedProjectsBusiness[i];
-      for (int j = 0; j < findedProjects2.length; j++) {
-        ProjectCP p2 = findedProjects2[j];
-        if (p1.post_name == p2.post_name) {
-          findedProjects3.add(p1);
-          continue;
-        }
-      }
-    }
-  }
+  for (ProjectCP p in findedProjectsRegions)
+    if (!findedProjects.contains(p)) findedProjects.add(p);
 
+  for (ProjectCP p in findedProjectsCountries)
+    if (!findedProjects.contains(p)) findedProjects.add(p);
 
-  for(ProjectCP p in findedProjects3)
+  for (ProjectCP p in findedProjects) {
     print(p.post_name);
+  }
 
   return findedProjects;
 }

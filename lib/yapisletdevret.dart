@@ -5,13 +5,27 @@ import 'package:flutter/rendering.dart';
 import 'package:gama_app/entities/projectBOT.dart';
 import 'dart:async';
 
-Image appBar = new Image(
-  image: new ExactAssetImage("assets/images/gama_holding_logo.jpg"),
+import 'main.dart';
+
+Image appBarEn = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_en.png"),
   height: 35.0,
 );
-Image bot_en_top_pic = new Image(
+
+Image appBarTr = new Image(
+  image: new ExactAssetImage("assets/images/gama_holding_logo_tr.png"),
+  height: 35.0,
+);
+
+Image bot_top_pic_en = new Image(
   image: AssetImage('assets/images/bot_en_top.png'),
 );
+
+Image bot_top_pic_tr = new Image(
+  image: AssetImage('assets/images/bot_tr_top.png'),
+);
+
+bool isEng = true;
 
 class YapIsletDevret extends StatefulWidget {
   final List<ProjectBOT> projects;
@@ -30,7 +44,7 @@ class _YapIsletDevretState extends State<YapIsletDevret> {
         return Container(
           child: Column(
             children: <Widget>[
-              if (currentIndex == 0) bot_en_top_pic,
+              if (currentIndex == 0) isEng ? bot_top_pic_en : bot_top_pic_tr,
               Container(
                 child: createViewItem(widget.projects[currentIndex], context),
               ),
@@ -112,13 +126,14 @@ class SecondScreenBOT extends StatefulWidget {
 }
 
 class DetailProjectBOT extends State<SecondScreenBOT> {
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
         iconTheme: IconThemeData(color: Colors.blue[900]),
-        title: appBar,
+        title: isEng ? appBarEn : appBarTr,
         backgroundColor: Colors.white,
       ),
       body: new ListView(
@@ -164,7 +179,7 @@ class DetailProjectBOT extends State<SecondScreenBOT> {
                           height: 30,
                         ),
                         Text(
-                          '  Location : ',
+                          isEng ? '  Location : ' : '  Lokasyon : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -183,7 +198,9 @@ class DetailProjectBOT extends State<SecondScreenBOT> {
                           height: 30,
                         ),
                         Text(
-                          '  Commercial Operations : ',
+                          isEng
+                              ? '  Commercial Operations : '
+                              : '  Ticari İşletmeye Giriş Tarihi : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -202,7 +219,9 @@ class DetailProjectBOT extends State<SecondScreenBOT> {
                           height: 30,
                         ),
                         Text(
-                          '  Concession Period : ',
+                          isEng
+                              ? '  Concession Period : '
+                              : '  İmtiyaz Süresi : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -221,7 +240,9 @@ class DetailProjectBOT extends State<SecondScreenBOT> {
                           height: 30,
                         ),
                         Text(
-                          '  Investment Amount : ',
+                          isEng
+                              ? '  Investment Amount : '
+                              : '  Yatırım Bedeli : ',
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -247,11 +268,14 @@ class YapIsletDevretScreen extends StatefulWidget {
 }
 
 class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
-  String yap_islet_devret_URL =
+  String yap_islet_devret_URL_en =
       'https://udev.gama.com.tr/holding/wp-json/api/en/v1/bot/';
 
+  String yap_islet_devret_URL_tr =
+      'https://udev.gama.com.tr/holding/wp-json/api/tr/v1/bot/';
+
   int _selectedIndex = 0;
-  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -263,15 +287,55 @@ class _YapIsletDevretScreenState extends State<YapIsletDevretScreen> {
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: appBar,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          ),
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(
             color: Colors.blue[900],
           ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                child: isEng ? appBarEn : appBarTr,
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              child: Text(
+                'TR',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+            Switch(
+              activeColor: Colors.blue[900],
+              inactiveThumbColor: Colors.red[900],
+              inactiveTrackColor: Colors.red[400],
+              onChanged: (val) => setState(() => isEng = val),
+              value: isEng,
+            ),
+            Container(
+              child: Text(
+                'EN',
+                style: TextStyle(color: Colors.black),
+              ),
+              margin: const EdgeInsets.only(top: 20.0),
+            ),
+          ],
         ),
         body: new Center(
           child: new FutureBuilder<List<ProjectBOT>>(
-            future: downloadJSONforBOT(yap_islet_devret_URL),
+            future: downloadJSONforBOT(
+                isEng ? yap_islet_devret_URL_en : yap_islet_devret_URL_tr),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<ProjectBOT> projects = snapshot.data;
