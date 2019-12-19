@@ -6,7 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:gama_app/entities/projectCP.dart';
 import 'dart:async';
 import 'package:flutter_multi_carousel/carousel.dart';
+import 'package:loadmore/loadmore.dart';
 
+import 'bottomNavigationBar.dart';
+import 'detailProject.dart';
 import 'main.dart';
 
 Image appBarTr = new Image(
@@ -179,20 +182,52 @@ class TaahhutProjeleri extends StatefulWidget {
 class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
   Widget build(context) {
     return ListView.builder(
+      scrollDirection: Axis.vertical,
       itemCount: widget.projects.length,
       itemBuilder: (context, int currentIndex) {
         return Container(
           child: Column(
             children: <Widget>[
               if (currentIndex == 0)
-                isEng ? taahhut_en_top_pic : taahhut_tr_top_pic,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  child: TextField(
+                    style: new TextStyle(height: 1.0, color: Colors.white),
+                    onChanged: (value) {
+                      value = value.toLowerCase();
+                      searchValue = value;
+                      value = '';
+                    },
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      labelText: isEng ? "Search" : "Arama",
+                      labelStyle: TextStyle(color: Colors.white),
+                      hintText: isEng ? "Search" : "Arama",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               if (currentIndex == 0)
                 Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: DropdownButton(
                     icon: Icon(
                       Icons.dehaze,
-                      color: Colors.blue[900],
+                      color: Colors.white,
                       size: 28.0,
                     ),
                     style: Theme.of(context).textTheme.body1,
@@ -211,9 +246,17 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                             newValue == 'Ongoing')) {
                           selectedFilters.remove('Completed');
                           selectedFilters.add('Ongoing');
-                        } else
+                        } else if ((selectedFilters.contains('Devam Eden') &&
+                            newValue == 'Tamamlanan')) {
+                          selectedFilters.remove('Devam Eden');
+                          selectedFilters.add('Tamamlanan');
+                        } else if ((selectedFilters.contains('Tamamlanan') &&
+                            newValue == 'Devam Eden')) {
+                          selectedFilters.remove('Tamamlanan');
+                          selectedFilters.add('Devam Eden');
+                        } else {
                           selectedFilters.add(newValue);
-                        searchProjectGivenFilters();
+                        }
                       });
                     },
                     items: [
@@ -223,7 +266,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                           isEng ? "Filters" : "Filtreler",
                           style: new TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[900],
+                              color: Colors.grey,
                               fontSize: 14),
                         ),
                       ),
@@ -436,30 +479,11 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
                   ),
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 ),
-              if (currentIndex == 0)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: TextField(
-                    style: new TextStyle(height: 1.0),
-                    onChanged: (value) {
-                      value = value.toLowerCase();
-                      searchValue = value;
-                      value = '';
-                    },
-                    decoration: InputDecoration(
-                      labelText: isEng ? "Search" : "Arama",
-                      hintText: isEng ? "Search" : "Arama",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               Container(
-                child: createViewItem(widget.projects[currentIndex], context),
+                child: Card(
+                  child: createViewItem(widget.projects[currentIndex], context),
+                  color: Colors.grey[850],
+                ),
               ),
             ],
           ),
@@ -470,53 +494,19 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
 
   Widget createViewItem(ProjectCP project, BuildContext context) {
     return new ListTile(
-      title: new Card(
-        elevation: 10.0,
-        child: new Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue[900]),
-          ),
-          padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                child: Image.network(
-                  project.featured_image[0].thumb,
-                ),
-                padding: EdgeInsets.only(bottom: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    child: Column(
-                      children: <Widget>[
-                        new Chip(
-                          label: new Text(
-                            project.post_title,
-                            style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                        new Chip(
-                          label: new Text(
-                            project.meta_data[0].city,
-                            style: new TextStyle(
-                              fontSize: 10,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(
+          project.featured_image[0].thumb,
         ),
+      ),
+      title: Text(
+        project.post_title,
+        style: TextStyle(
+            fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        project.meta_data[0].city,
+        style: TextStyle(fontSize: 10, color: Colors.white),
       ),
       onTap: () {
         var route = new MaterialPageRoute(
@@ -529,252 +519,7 @@ class _TaahhutProjeleriState extends State<TaahhutProjeleri> {
   }
 }
 
-class SecondScreenProjeler extends StatefulWidget {
-  final ProjectCP value;
 
-  SecondScreenProjeler({Key key, this.value}) : super(key: key);
-
-  @override
-  DetailProject createState() => DetailProject();
-}
-
-class DetailProject extends State<SecondScreenProjeler> {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      appBar: new AppBar(
-        iconTheme: IconThemeData(color: Colors.blue[900]),
-        title: isEng ? appBarEn : appBarTr,
-        backgroundColor: Colors.white,
-      ),
-      body: new ListView(
-        children: <Widget>[
-          Container(
-            child: new Center(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                  ),
-                  Padding(
-                    child: Image.network(
-                      widget.value.featured_image[0].large,
-                      height: 150,
-                    ),
-                    padding: EdgeInsets.only(bottom: 8.0),
-                  ),
-                  Padding(
-                    child: new Text(
-                      widget.value.post_title,
-                      style: new TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    padding: EdgeInsets.all(5.0),
-                  ),
-                  Padding(
-                    child: new Text(
-                      widget.value.post_content,
-                      textAlign: TextAlign.left,
-                    ),
-                    padding: EdgeInsets.all(20.0),
-                  ),
-                  Padding(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/location.png',
-                          height: 30,
-                        ),
-                        Text(
-                          isEng ? '  Location : ' : '  Lokasyon : ',
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                            child: Text(widget.value.meta_data[0].city +
-                                ', ' +
-                                widget.value.country[0].name)),
-                      ],
-                    ),
-                    padding: EdgeInsets.all(20.0),
-                  ),
-                  Padding(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/client.png',
-                          height: 30,
-                        ),
-                        Text(
-                          isEng ? '  Client : ' : '  İşveren : ',
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                            child: Text(widget.value.meta_data[0].employer))
-                      ],
-                    ),
-                    padding: EdgeInsets.all(20.0),
-                  ),
-                  Padding(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/contractor.png',
-                          height: 30,
-                        ),
-                        Text(
-                          isEng ? '  Contractor : ' : '  Genel Müteahhit : ',
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                            child: Text(
-                          widget.value.meta_data[0].main_contractor,
-                        ))
-                      ],
-                    ),
-                    padding: EdgeInsets.all(20.0),
-                  ),
-                  Padding(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/estimated.png',
-                          height: 30,
-                        ),
-                        Text(
-                          isEng
-                              ? '  Estimated Completion : '
-                              : '  Tahmini Bitiş : ',
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (widget.value.meta_data[0].expected_end != "")
-                          Expanded(
-                            child: Text(widget.value.meta_data[0].expected_end),
-                          )
-                        else
-                          Expanded(
-                            child: Text(widget.value.meta_data[0].duration),
-                          )
-                      ],
-                    ),
-                    padding: EdgeInsets.all(20.0),
-                  ),
-                  if (widget.value.meta_data[0].price != "")
-                    Padding(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/images/amount.png',
-                            height: 30,
-                          ),
-                          Text(
-                            isEng ? '  Project Amount : ' : '  Proje Bedeli : ',
-                            style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Expanded(child: Text(widget.value.meta_data[0].price))
-                        ],
-                      ),
-                      padding: EdgeInsets.all(20.0),
-                    ),
-                  if (widget.value.meta_data[0].man_hour != "")
-                    Padding(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/images/man_hour.png',
-                            height: 30,
-                          ),
-                          Text(
-                            isEng ? '  Man-Hour : ' : '  Adam-Saat : ',
-                            style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Expanded(
-                              child: Text(widget.value.meta_data[0].man_hour))
-                        ],
-                      ),
-                      padding: EdgeInsets.all(20.0),
-                    ),
-                  if (widget.value.meta_data[0].awards.length != 0)
-                    Padding(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/images/award.png',
-                            height: 30,
-                          ),
-                          Text(
-                            isEng ? '  Award : ' : '  Ödül : ',
-                            style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Expanded(
-                              child: Text(widget.value.meta_data[0].awards[0]))
-                        ],
-                      ),
-                      padding: EdgeInsets.all(20.0),
-                    ),
-                  Padding(
-                    child: Container(
-                      child: Carousel(
-                        height: 350,
-                        width: 270,
-                        type: "simple",
-                        indicatorType: "dot",
-                        arrowColor: Colors.grey,
-                        axis: Axis.horizontal,
-                        showArrow: true,
-                        children: widget.value.gallery.map((it) {
-                          return it.thumb == null
-                              ? new Container(
-                                  margin:
-                                      new EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration:
-                                      BoxDecoration(color: Colors.white),
-                                  child: new Image.asset(
-                                      'assets/images/no_image.png'))
-                              : new Container(
-                                  margin:
-                                      new EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration:
-                                      BoxDecoration(color: Colors.white),
-                                  child: new Image.network(it.thumb));
-                        }).toList(),
-                      ),
-                    ),
-                    padding: EdgeInsets.fromLTRB(20, 90, 20, 10),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class TaahhutProjeleriScreen extends StatefulWidget {
   @override
@@ -783,10 +528,10 @@ class TaahhutProjeleriScreen extends StatefulWidget {
 
 class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
   String taahhut_projeleri_URL_en =
-      'https://udev.gama.com.tr/holding/wp-json/api/en/v1/projects';
+      'https://holding.gama.com.tr/wp-json/api/en/v1/projects/';
 
   String taahhut_projeleri_URL_tr =
-      'https://udev.gama.com.tr/holding/wp-json/api/tr/v1/projects';
+      'https://holding.gama.com.tr/wp-json/api/tr/v1/projects/';
 
   @override
   Widget build(BuildContext context) {
@@ -798,6 +543,7 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
 
     return new MaterialApp(
       home: new Scaffold(
+        backgroundColor: Colors.white10,
         appBar: new AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -811,12 +557,7 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
               child: FlatButton(
                 child: isEng ? appBarEn : appBarTr,
                 color: Colors.white,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
-                },
+                onPressed: () {},
               ),
             ),
             Container(

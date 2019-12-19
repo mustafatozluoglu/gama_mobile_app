@@ -18,25 +18,17 @@ Image appBarTr = new Image(
 
 bool isEng = true;
 
-class GeneralApplicationScreen extends StatefulWidget {
+class CompaniesScreen extends StatefulWidget {
   @override
-  _GeneralApplicationScreenState createState() =>
-      _GeneralApplicationScreenState();
+  _CompaniesScreenState createState() => _CompaniesScreenState();
 }
 
-class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
+class _CompaniesScreenState extends State<CompaniesScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[850],
         appBar: new AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, false),
-          ),
           iconTheme: IconThemeData(
             color: Colors.blue[900],
           ),
@@ -47,9 +39,7 @@ class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
               child: FlatButton(
                 child: isEng ? appBarEn : appBarTr,
                 color: Colors.white,
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
               ),
             ),
             Container(
@@ -75,15 +65,10 @@ class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
             ),
           ],
         ),
-        body:Text('GENERAL APPLICATION') /*WebView(
-          key: UniqueKey(),
-          initialUrl:
-              "https://holding.gama.com.tr/en/career/career-at-gama/general-application/",
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewConroller) {
-            //_controller.complete(webViewConroller);
-          },
-        ),*/
+        body: Text(
+          'COMPANIES',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

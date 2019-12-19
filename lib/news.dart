@@ -18,16 +18,14 @@ Image appBarTr = new Image(
 
 bool isEng = true;
 
-class GeneralApplicationScreen extends StatefulWidget {
+class NewsScreen extends StatefulWidget {
   @override
-  _GeneralApplicationScreenState createState() =>
-      _GeneralApplicationScreenState();
+  _NewsScreenState createState() =>
+      _NewsScreenState();
 }
 
-class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
+class _NewsScreenState extends State<NewsScreen> {
+  
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -75,15 +73,7 @@ class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
             ),
           ],
         ),
-        body:Text('GENERAL APPLICATION') /*WebView(
-          key: UniqueKey(),
-          initialUrl:
-              "https://holding.gama.com.tr/en/career/career-at-gama/general-application/",
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewConroller) {
-            //_controller.complete(webViewConroller);
-          },
-        ),*/
+        body: Text('NEWS'),
       ),
     );
   }

@@ -37,8 +37,7 @@ dependencies:
   flutter_webview_plugin: ^0.3.10
   flutter_multi_carousel: ^1.0.0
   loadmore: ^1.0.4
-  flutter_inappbrowser: ^2.0.2
-  flutter_inappwebview: ^2.1.0+1
+  google_maps_flutter: ^0.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -87,6 +86,7 @@ flutter:
   - assets/images/human_resources.jpg  
   - assets/images/general_application.jpg
   - assets/images/yapisletdevret.jpg
+  - assets/images/news.png
 
 
   # The following line ensures that the Material Icons font is

@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'bottomNavigationBar.dart';
 import 'main.dart';
 
 Image appBarEn = new Image(
@@ -18,25 +17,17 @@ Image appBarTr = new Image(
 
 bool isEng = true;
 
-class GeneralApplicationScreen extends StatefulWidget {
+class ContactScreen extends StatefulWidget {
   @override
-  _GeneralApplicationScreenState createState() =>
-      _GeneralApplicationScreenState();
+  _ContactScreenState createState() => _ContactScreenState();
 }
 
-class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
+class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[850],
         appBar: new AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, false),
-          ),
           iconTheme: IconThemeData(
             color: Colors.blue[900],
           ),
@@ -44,13 +35,7 @@ class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                child: isEng ? appBarEn : appBarTr,
-                color: Colors.white,
-                onPressed: () {
-                  
-                },
-              ),
+              child: isEng ? appBarEn : appBarTr,
             ),
             Container(
               child: Text(
@@ -75,15 +60,33 @@ class _GeneralApplicationScreenState extends State<GeneralApplicationScreen> {
             ),
           ],
         ),
-        body:Text('GENERAL APPLICATION') /*WebView(
-          key: UniqueKey(),
-          initialUrl:
-              "https://holding.gama.com.tr/en/career/career-at-gama/general-application/",
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewConroller) {
-            //_controller.complete(webViewConroller);
-          },
-        ),*/
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'GAMA Holding A.Ş.\n',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            Text(
+              'Adres:	GAMA Binası, Nergiz Sokak No: 9, Beştepe, Yenimahalle 06560 Ankara, Turkey\n',
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              'Telefon:	+90 (312) 248 42 00\n',
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              'Fax:	+90 (312) 248 42 01\n',
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              'Mail: holding@gama.com.tr\n',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
