@@ -24,7 +24,7 @@ bool isEng = true;
 
 String searchValue;
 
-var allProjectsList;
+List<ProjectCP> allProjectsList;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -33,82 +33,85 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey[850],
-        appBar: new AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.blue[900],
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          backgroundColor: Colors.grey[850],
+          appBar: new AppBar(
+            iconTheme: IconThemeData(
+              color: Colors.blue[900],
+            ),
+            backgroundColor: Colors.white,
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FlatButton(
+                  child: isEng ? appBarEn : appBarTr,
+                  color: Colors.white,
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                child: Text(
+                  'TR',
+                  style: TextStyle(color: Colors.black),
+                ),
+                margin: const EdgeInsets.only(top: 20.0),
+              ),
+              Switch(
+                activeColor: Colors.blue[900],
+                inactiveThumbColor: Colors.red[900],
+                inactiveTrackColor: Colors.red[400],
+                onChanged: (val) => setState(() => isEng = val),
+                value: isEng,
+              ),
+              Container(
+                child: Text(
+                  'EN',
+                  style: TextStyle(color: Colors.black),
+                ),
+                margin: const EdgeInsets.only(top: 20.0),
+              ),
+            ],
           ),
-          backgroundColor: Colors.white,
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                child: isEng ? appBarEn : appBarTr,
-                color: Colors.white,
-                onPressed: () {},
-              ),
-            ),
-            Container(
-              child: Text(
-                'TR',
-                style: TextStyle(color: Colors.black),
-              ),
-              margin: const EdgeInsets.only(top: 20.0),
-            ),
-            Switch(
-              activeColor: Colors.blue[900],
-              inactiveThumbColor: Colors.red[900],
-              inactiveTrackColor: Colors.red[400],
-              onChanged: (val) => setState(() => isEng = val),
-              value: isEng,
-            ),
-            Container(
-              child: Text(
-                'EN',
-                style: TextStyle(color: Colors.black),
-              ),
-              margin: const EdgeInsets.only(top: 20.0),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: TextField(
-            style: new TextStyle(height: 1.0, color: Colors.white),
-            onChanged: (value) {
-              value = value.toLowerCase();
-              searchValue = value;
-              downloadJSONforProjects(isEng
-                  ? 'https://holding.gama.com.tr/wp-json/api/en/v1/projects/'
-                  : 'https://holding.gama.com.tr/wp-json/api/tr/v1/projects/');
-              value = '';
-            },
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-              ),
-              labelText: isEng ? "Search" : "Arama",
-              labelStyle: TextStyle(color: Colors.white),
-              hintText: isEng ? "Search" : "Arama",
-              hintStyle: TextStyle(color: Colors.white),
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20.0),
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: TextField(
+              style: new TextStyle(height: 1.0, color: Colors.white),
+              onChanged: (value) {
+                value = value.toLowerCase();
+                searchValue = value;
+                downloadJSONforProjects(isEng
+                    ? 'https://holding.gama.com.tr/wp-json/api/en/v1/projects/'
+                    : 'https://holding.gama.com.tr/wp-json/api/tr/v1/projects/');
+                searchProjectGivenString(searchValue);
+                value = '';
+              },
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelText: isEng ? "Search" : "Arama",
+                labelStyle: TextStyle(color: Colors.white),
+                hintText: isEng ? "Search" : "Arama",
+                hintStyle: TextStyle(color: Colors.white),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -169,6 +172,11 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
     searchValue = null; // For starting constracting projects page
     if (l.isNotEmpty) return l;
   }
+
+  allProjectsList.sort((a, b) {
+    // alphabetical order for all projects
+    return a.post_name.compareTo(b.post_name);
+  });
 
   return allProjectsList;
 }

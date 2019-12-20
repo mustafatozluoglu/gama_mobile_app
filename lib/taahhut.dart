@@ -164,7 +164,7 @@ List<String> selectedBusiness = <String>[];
 List<String> selectedRegions = <String>[];
 List<String> selectedCountries = <String>[];
 
-var allProjectsList;
+List<ProjectCP> allProjectsList;
 
 String searchValue;
 
@@ -541,10 +541,7 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
     selectedRegions = [];
     selectedCountries = [];
 
-    return new MaterialApp(
-      home: new Scaffold(
-        backgroundColor: Colors.white10,
-        appBar: new AppBar(
+    var appBar = new AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context, false),
@@ -582,7 +579,13 @@ class _TaahhutProjeleriScreenState extends State<TaahhutProjeleriScreen> {
               margin: const EdgeInsets.only(top: 20.0),
             ),
           ],
-        ),
+        );
+
+
+    return new MaterialApp(
+      home: new Scaffold(
+        backgroundColor: Colors.white10,
+        appBar: appBar,
         body: new Center(
           child: new FutureBuilder<List<ProjectCP>>(
             future: downloadJSONforProjects(
@@ -632,7 +635,12 @@ Future<List<ProjectCP>> downloadJSONforProjects(String url) async {
     return searchProjectGivenFilters();
   }
 
+  allProjectsList.sort((a,b){ // alphabetical order for all projects
+    return a.post_title.toLowerCase().compareTo(b.post_title.toLowerCase());
+  });
+
   return allProjectsList;
+
 }
 
 List<ProjectCP> searchProjectGivenString(String s) {
@@ -738,3 +746,5 @@ Future<List<ProjectCP>> searchProjectGivenFilters() async {
 
   return findedProjects;
 }
+
+
